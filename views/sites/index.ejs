@@ -1,0 +1,150 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+<link rel="stylesheet" href="/stylesheets/map.css"></link>
+<!-- Scrolling tabs -->
+<link rel='stylesheet' type="text/css" href="/stylesheets/jquery.scrolling-tabs.min.css"></link>
+<% include ../partials/nav %>
+
+<div class="container">
+    <div id="map" class="map rounded mb-3"></div>
+    <% if( currentUser.isAdmin ) { %>
+                <a class="btn btn-outline-dark d-block d-sm-inline p-2" href="/sites/select">Add New Asset</a>
+            <% } else { %>
+                <a class="btn btn-outline-dark d-inline p-2 disabledLink" data-toggle="tooltip" data-placement="left" title="Contact your admin to add a new site">
+                    <span class="nav-link" href="/sites/select" data-toggle="tooltip" data-placement="left" title="Contact your admin to add a new site">Add New Asset</span>
+            <% } %>
+    <form class="form-inline pb-2 mt-3" action="/sites/filter" method="POST">
+        
+        <select required class="form-control mr-0 mr-sm-2" name="filter" aria-label="areaCode Filter" onchange="this.form.submit()">
+            <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
+            'GA', 'GB', 'GC', 'GI', 'HI', 'KC', 'MC', 'MI', 'MO', 'MP', 'MU', 'PL',
+            'PN', 'PS', 'SA', 'SM', 'SP', 'SS', 'ST', 'VK', 'VR', 'WC', 'WD', 'WR']%>
+            <option value="" selected>Area Code</option>
+            <% areas.forEach(function(area){ %>
+                <option value="<%= area %>"><%= area %></option>
+            <% }); %>
+        </select>
+        <button class="btn btn-outline-success my-2 my-sm-0 mr-2" type="submit">Search</button>
+        <% if ( path == '/sites/filter' ) { %>
+            <a class="btn btn-outline-primary" href="/sites">Clear Search</a>
+        <% } %>
+    </form>
+    
+    
+    <% let objs = ['Platform', 'MODU', 'Deepwater', 'Other']; %>
+    
+    <ul class="nav nav-pills mb-3" id="myTab" role="tablist">
+        <li class="nav-item ">
+            <a class="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="true">All Assets</a>
+        </li>
+        <% objs.forEach(function( obj ){ %>
+            <li class="nav-item ">
+                <a class="nav-link" id="<%=obj%>-tab" data-toggle="tab" href="#<%=obj%>" role="tab" aria-controls="list" aria-selected="false"><%=obj%></a>
+            </li>
+        <% }); %>
+    </ul>
+    
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+            <div class="row mx-0 justify-content-start" style="width:100%;">
+                <% sites.forEach(function(site) {%>
+                    <div class="card mb-2 mb-md-5 mx-0 mx-md-3">
+                        <h5 class="card-header"><%= site.properties.type %>: <%= site.properties.areaCode%> <%=site.properties.blockNumber%> <%= site.properties.name %></h5>
+                        <div class="card-body">
+                            <p class="card-text mb-0">Field: <%= site.properties['field'] %></p>
+                            <p class="card-text mb-0">Coordinates:</p>
+                            <p class="card-text mb-0"><%= site.geometry.coordinates[1] %>, <%= site.geometry.coordinates[0] %></p>
+                            <p class="card-text">Air Gap: <%= site.properties.airgap %></p>
+                        </div>
+                        <% if( currentUser.isAdmin == true ) {%>
+                            <div class="card-body pt-0">
+                                <a href="/sites/<%= site._id %>/edit/" class="btn btn-secondary card-link">Edit</a>
+                                <form class="ml-0 card-link" action="/sites/<%= site._id %>?_method=DELETE" method="POST">
+                                    <input class="btn btn-danger" type="submit" value="Delete" onClick="return confirm('Are you absolutely sure you want to delete?')">
+                                </form>
+                            </div>
+                        <% }; %>
+                    </div>
+                <% }); %>    
+            </div>        
+        </div>
+        <% objs.forEach(function(obj){ %>
+            <div class="tab-pane fade" id="<%=obj%>" role="tabpanel" aria-labelledby="<%=obj%>-tab">
+                <div class="row mx-0 justify-content-start" style="width:100%;">
+                    <% sites.forEach(function(site) {%>
+                        <% if ( site.properties.type == obj ) {%>
+                            <div class="card mb-2 mb-md-5 mx-0 mx-md-3">
+                                <h5 class="card-header"><%= site.properties.type %>: <%= site.properties.name %></h5>
+                                <div class="card-body">
+                                    <p class="card-text mb-0">Field: <%= site.properties['field'] %></p>
+                                    <p class="card-text mb-0">Coordinates:</p>
+                                    <p class="card-text mb-0"><%= site.geometry.coordinates[1] %>, <%= site.geometry.coordinates[0] %></p>
+                                    <p class="card-text">Air gap: <%= site.properties.airgap %></p>
+                                </div>
+                                <% if( currentUser.isAdmin == true ) {%>
+                                    <div class="card-body pt-0">
+                                        <a href="/sites/<%= site._id %>/edit/" class="btn btn-secondary card-link">Edit</a>
+                                        <form class="ml-0 card-link" action="/sites/<%= site._id %>?_method=DELETE" method="POST">
+                                            <input class="btn btn-danger" type="submit" value="Delete" onClick="return confirm('Are you absolutely sure you want to delete?')">
+                                        </form>
+                                    </div>
+                                <% }; %>
+                            </div>
+                        <% } %>
+                    <% }); %>    
+                </div>        
+            </div>
+        <% }); %>
+    </div>
+    
+</div>
+
+<% if (sites) { %>
+   <script>
+      var sites = JSON.parse('<%- JSON.stringify(sites) %>');
+      var map;
+      
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 5,
+          center: new google.maps.LatLng(25,-90),
+          mapTypeId: 'satellite'
+        });
+
+        sites.forEach(function(site){
+            var contentWindow = site.properties.name;
+            var infoWindow = new google.maps.InfoWindow({
+                content: contentWindow
+            });
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(site.geometry.coordinates[1], site.geometry.coordinates[0]),
+                map: map,
+                title: "Place: " + site.properties.name,
+                icon:  {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 3,
+                    strokeColor: 'white',
+                    strokeWeight: 2
+                }
+            });
+            marker.addListener('click', function() {
+                infoWindow.open(map, marker);
+            });
+            google.maps.event.addListener(map, "click", function(event) {
+                infoWindow.close();
+            });
+        });
+      }; 
+      
+   </script>
+<% } %>
+
+<!-- Google Maps JS API -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcjkKAD8wUDIsg4FDC0t8_FGVgCoD-MrA&callback=initMap"></script>
+
+
+<script src='/scripts/jquery.scrolling-tabs.min.js'></script>
+<script src='/scripts/scrolling.js'></script>
+
+<% include ../partials/footer %>

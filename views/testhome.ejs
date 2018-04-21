@@ -1,0 +1,63 @@
+<% include ./partials/header %>
+<!-- Now I can add custom links for each page here -->
+<!-- Because the header partial does not have the </head> tag, but the nav partial does -->
+
+<link href="/stylesheets/home.css" rel="stylesheet"></link>
+
+<% include ./partials/nav %>
+
+<div class=" pt-0">
+  <img class="d-block img-fluid mx-auto STlogo" src="/images/logo_st.png" id="logo_st">
+  
+  <div class="row justify-content-center m-1 m-sm-4 mt-4">
+  	<div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+      	<img src="/images/hurricane.png">
+      	<a href="/sites">A</a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Assests</p>
+  	</div>
+    <div class="d-flex flex-column mx-3 mx-sm-5">
+  		<div class="box">
+      	<img src="/images/hurricane.png">
+      	<a class="" href="/weather/activity">T</a>
+    	</div>
+    	<p class="iconText mx-auto">Tracking</p>
+  	</div>
+    <div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+      	<img src="/images/hurricane.png">
+      	<a href="#">O</a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Outlook</p>
+  	</div>
+  </div>
+  
+  <div class="row justify-content-center img-fluid m-1 m-sm-4 my-3">
+    <div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+      	<img src="/images/hurricane.png">
+      	<a href="/weather/winds">M</a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Models</p>
+  	</div>
+  	<div class="d-flex flex-column mx-3 mx-sm-5">
+  		<div class="box">
+      	<img src="/images/hurricane.png">
+      	<a href="/weather/waves">R</a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Radar</p>
+  	</div>
+  	<div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+      	<img src="/images/hurricane.png">
+      	<a href="/weather/surge">W</a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Weather</p>
+  	</div>
+  </div>
+  
+</div>
+  
+
+<%  include ./partials/footer %>

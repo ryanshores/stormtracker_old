@@ -1,0 +1,23 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/forms.css">
+
+<% include ../partials/nav %>
+
+<form class="form-class" method="POST" action="/forgot">
+    <div class="text-center mb-4 mt-3">
+        <img class="mb-4 STlogo img-fluid" src="/images/logo_st.png" alt="" height="72">
+        <h5 class="mb-3 font-weight-normal">Forgot Password</h5>
+    </div>
+
+    <div class="form-label-group">
+        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+        <label for="inputEmail">Email address</label>
+    </div>
+
+
+    <button class="btn btn-lg btn-outline-dark btn-block" type="submit">Reset Password</button>
+</form>
+
+
+<% include ../partials/footer %>

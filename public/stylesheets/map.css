@@ -1,0 +1,22 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.map {
+    height: 50vh;
+    width: 100%;
+    color: black;
+    margin: 0 auto;
+}
+
+.norm {
+    font-size: 1rem;
+}
+
+@media (min-width: 576px) {
+    .map {
+    height: 70vh;
+    }
+}

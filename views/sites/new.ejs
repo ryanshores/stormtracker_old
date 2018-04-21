@@ -1,0 +1,75 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/forms.css">
+
+<% include ../partials/nav %>
+
+<form class="form-class" action="/sites/new" method="POST" id="siteForm">
+  
+  <div class="text-center mb-4">
+      <img class="mb-4 STlogo img-fluid" src="/images/logo_st.png" alt="" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Create new asset</h1>
+  </div>
+  
+  <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
+            'GA', 'GB', 'GC', 'GI', 'HI', 'KC', 'MC', 'MI', 'MO', 'MP', 'MU', 'PL',
+            'PN', 'PS', 'SA', 'SM', 'SP', 'SS', 'ST', 'VK', 'VR', 'WC', 'WD', 'WR'] %>
+  <div class="form-group">
+        <label for="inputTypeOfSite">Select the area code of the asset</label>
+        <select class="custom-select" name="areaCode" form="siteForm">
+            <option disabled hidden>Select the area code</option>
+            <% areas.forEach(function(area){ %>
+            <option value="<%= area %>"><%= area %></option>
+            <% }) %>
+        </select>
+  </div>
+  
+  <div class="form-label-group">
+      <input type="number" id="inputBlockNumber" name="blockNumber" class="form-control" placeholder="blockNumber" required step="1">
+      <label for="inputBlockNumber">Enter the block number of the asset</label> 
+  </div>
+  
+  <div class="form-label-group">
+      <input type="text" id="inputfield" name="field" class="form-control" placeholder="field" required>
+      <label for="inputfield">Enter the field of the asset</label> 
+  </div> 
+  
+  <div class="form-label-group">
+      <input type="text" id="inputName" name="name" class="form-control" placeholder="Site Name" required autofocus="true">
+      <label for="inputName">Enter the name of the asset</label>
+  </div>
+  
+  <div class="form-label-group">
+      <input type="number" id="inputLat" name="lat" class="form-control" placeholder="Latitue Coordinate" required step="0.00000001">
+      <label for="inputLat">Enter the latitude of the asset</label> 
+  </div>
+  
+  <div class="form-label-group">
+      <input type="number" id="inputLng" name="lng" class="form-control" placeholder="Longitude Coordinate" required step="0.00000001">
+      <label for="inputLng">Enter the longitude of the asset</label> 
+  </div>
+  
+
+  
+  <div class="form-label-group">
+      <input type="number" id="inputAirGap" name="airGap" class="form-control" placeholder="Air Gap" step="0.5">
+      <label for="inputAirGap">Enter the Air Gap (feet)</label>
+  </div>
+  
+  <div class="form-group">
+                <label for="inputTypeOfSite">Select the type of site</label>
+                <select required class="custom-select" name="type" form="siteForm" id="inputTypeOfSite">
+                    <option value="" selected>Select the type of site</option>
+                    <option value="Platform">Platform</option>
+                    <option value="MODU">MODU</option>
+                    <option value="Deepwater">Deep Water</option>
+                    <option value="Other">Other</option>
+                </select>    
+            </div>
+
+  <button class="btn btn-lg btn-outline-dark btn-block" type="submit">Submit</button>
+  
+</form>
+
+
+<% include ../partials/footer %>

@@ -1,0 +1,72 @@
+<% include ./partials/header %>
+<!-- Now I can add custom links for each page here -->
+<!-- Because the header partial does not have the </head> tag, but the nav partial does -->
+
+<link href="/stylesheets/home.css" rel="stylesheet"></link>
+
+<% include ./partials/nav %>
+
+<div class="container">
+  <img class="d-block img-fluid mx-auto mb-5 mt-3 STlogo" src="/images/logo_st.png" id="logo_st">
+  
+  <div class="row justify-content-center mx-1 mx-sm-4">
+  	<div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+  		  <a href="/sites">
+  		    <img src="/icons/platform.png">
+  		  </a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Assets</p>
+  	</div>
+    <div class="d-flex flex-column mx-3 mx-sm-5">
+  		<div class="box">
+  		  <a href="/weather/outlook">
+  		    <img id="hurricane" src="/icons/outlook.png">
+  		  </a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Outlook</p>
+  	</div>
+    <div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+  		  <a href="/weather/activity">
+  		    <img src="/icons/hurricane.png">
+  		  </a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Tracking</p>
+  	</div>
+  </div>
+  
+  <div class="row justify-content-center img-fluid mx-1 mx-sm-4 my-3">
+    <div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+  		  <a href="/weather/models">
+  		    <img src="/icons/model.png">
+  		  </a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Models</p>
+  	</div>
+  	<div class="d-flex flex-column mx-3 mx-sm-5">
+  		<div class="box">
+  		  <a href="/weather/satellite">
+  		    <img src="/icons/satellite.png">
+  		  </a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Satellite</p>
+  	</div>
+  	<div class="d-flex flex-column mx-3 mx-sm-4">
+  		<div class="box">
+  		  <a href="/weather/current">
+  		    <img src="/icons/weather.png">
+  		  </a>
+    	</div>
+    	<p class="iconText mx-auto mt-2">Weather</p>
+  	</div>
+  </div>
+</div>
+<footer class="position-fixed fixed-bottom text-center">
+  <p class="text-center mb-0">	MatthewsDaniel © 2018 - All rights reserved</p>
+  <a class='ml-2 mb-3' href="/credits">Credits</a>
+</footer>
+  
+
+<%  include ./partials/footer %>

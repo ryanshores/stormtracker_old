@@ -1,0 +1,28 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/forms.css">
+
+<% include ../partials/nav %>
+
+<form class="form-class" method="POST" action="/reset/<%= token %>">
+    <!-- need to add route back after I find out the correct password change function -->
+
+    <div class="text-center mb-4 mt-3">
+        <h1 class="h5 mb-3 font-weight-normal">Change Password</h1>
+    </div>
+     
+    <div class="form-label-group">
+        <input type="password" id="inputNewPassword" name="password" class="form-control" placeholder="Enter your new password" required="true" autofocus="true">
+        <label for="inputNewPassword">New password</label>
+    </div>
+    
+    <div class="form-label-group">
+        <input type="password" id="inputConfirm" name="confirm" class="form-control" placeholder="One more time just for good measure" required="true">
+        <label for="inputConfirm">Confirm New Password</label>
+    </div>
+     
+    <button type="submit" class="btn btn-outline-dark">Update Password</button>
+    
+</form>
+
+<% include ../partials/footer %>

@@ -1,0 +1,126 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" href="/stylesheets/map.css"></link>
+
+<% include ../partials/nav %>
+  <% console.log( storms[0] ) %>
+<div class="container">
+  <h4 class="mb-0">Current Storms - Example</h4>
+  <p class="text-muted">Showing historical data</p>
+  <div id="map" class="map"></div> 
+  <p class="credited">Data provided by 
+  <a href="https://www.wunderground.com/?apiref=906c96c4bb4ea25d">Wunderground</a>
+  and the 
+  <a href="https://www.nhc.noaa.gov/">NHC</a></p>
+</div>
+
+<script>
+var map;
+function initMap() {
+  
+  // Get the storms passed from the server
+  var storms = JSON.parse('<%- JSON.stringify(storms) %>');
+  // setup the map of all storms
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 3,
+    center: new google.maps.LatLng(21.5, -60),
+    mapTypeId: 'terrain'
+  });
+
+  var coneLayer = new google.maps.KmlLayer({
+    url: 'https://www.nhc.noaa.gov/gis/examples/AL112017_020adv_CONE.kmz',
+    // href: '/kmz/al112017_020adv_CONE.kml',
+    map: map
+  });
+
+  var trekLayer = new google.maps.KmlLayer({
+    url: 'https://www.nhc.noaa.gov/gis/examples/AL112017_020adv_TRACK.kmz',
+    map: map
+  });
+  
+  var windLayer = new google.maps.KmlLayer({
+    url: 'https://www.nhc.noaa.gov/gis/examples/2016100512_wsp64knt120hr_5km.kmz',
+    map: map
+  });
+  
+  // add all storm information to storm map
+  storms.forEach(function(storm){
+    var contentWindow =
+      '<p>Name: ' + storm.name + '</p>' +
+      '<p>Category: ' + storm.category + '</p>' + 
+      '<p>Coordinates: ' + storm.lat + ', ' + storm.lng + '</p>' +
+      '<p>Speed: ' + storm.fspeed + '</p>' +
+      '<p>Direction: ' + storm.direction + '</p>';
+    
+    var infoWindow = new google.maps.InfoWindow({
+        content: contentWindow
+    });
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(storm.lat, storm.lng),
+        map: map,
+        title: "Storm",
+        icon: "/images/hurricane-small.png"
+    });  
+    marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+    });
+    google.maps.event.addListener(map, "click", function(event) {
+      infoWindow.close();
+    });
+    
+    storm['Forecast'].forEach(function(forecast){
+      var contentWindow =
+        '<p>Name: ' + storm.name + '</p>' +
+        '<p>Hour: ' + forecast.hour + '</p>' + 
+        '<p>Category: ' + forecast.category + '</p>' + 
+        '<p>Coordinates: ' + forecast.lat + ', ' + forecast.lng + '</p>';
+      var infoWindow = new google.maps.InfoWindow({
+          content: contentWindow
+      });
+      var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(forecast.lat, forecast.lng),
+          map: map,
+          title: "Storm",
+          icon: "/images/hurricane-small.png"
+      });  
+      marker.addListener('click', function() {
+          infoWindow.open(map, marker);
+      });
+      google.maps.event.addListener(map, "click", function(event) {
+        infoWindow.close();
+      });
+    });
+    
+  });
+  
+  // if server sends sites, put them on the map
+  <% if ( sites.length > 0 ) { %>
+    var sites = JSON.parse('<%- JSON.stringify(sites) %>');
+    sites.forEach(function(site){
+      var contentWindow = site.properties.name;
+      var infoWindow = new google.maps.InfoWindow({
+          content: contentWindow
+      });
+      var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(site.geometry.coordinates[1], site.geometry.coordinates[0]),
+          map: map,
+          title: "Place: " + site.properties.name
+      });
+      marker.addListener('click', function() {
+          infoWindow.open(map, marker);
+      });
+      google.maps.event.addListener(map, "click", function(event) {
+        infoWindow.close();
+      });
+    });
+  <% } %>
+
+}; 
+</script>
+
+
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcjkKAD8wUDIsg4FDC0t8_FGVgCoD-MrA&callback=initMap"></script>
+
+
+<% include ../partials/footer %>

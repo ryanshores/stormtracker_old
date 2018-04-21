@@ -1,0 +1,61 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+
+<% include ../partials/nav %>
+<div class="container">
+    <div class="row ">
+        <div class="pac-card mx-auto mt-3 mb-0" id="placeCard">
+            <div id="pac-container">
+                <input id="pac-input" type="text" placeholder="Enter a city">
+            </div>
+        </div>
+        <form class="d-none" id="form" method="POST" action="/weather/current">
+            <input id="coords" name="coords"></input>
+        </form>    
+    </div>
+    
+    
+    <% if( locals.forecast ) { %>
+    <div class="row justify-content-center my-2">
+        <div class="card" style="height: 210px;">
+            <iframe
+              width="100%"
+              height="100%"
+              frameborder="0" style="border:0"
+              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCCX5a3FYM8k6yeA_Bw_FSDmmgum21BBmY
+              &zoom=10
+              &q=<%= coords %>">
+            </iframe>
+        </div>
+        
+        <% forecast.forEach(function(day, i) { if( i <  10 ) {%>
+            
+            <div class="card">
+                <h5 class="card-header d-flex justify-content-between align-items-center"><%= day.weekday %><img src="<%= day.icon %>"></h5>
+                <div class="card-body">
+                    <h5 class="card-title">Conditions: <%= day.condition %></h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Chance of Percipitation: <%= day.percentage %>%</h6>
+                    <p class="card-text mb-2">High: <%= day.highT %> ℉ <span style="opacity: 0.75;">Low: <%= day.lowT %> ℉</span></p>
+                    <p class="card-text mb-2">Wind: <%= day.windSpeed %> <%= day.windDirection%> Gusts: <%=day.gustSpeed%> <%=day.gustDirection%></p>
+                    <p class="card-text mb-2">Humidity: <%= day.humidity %>%</p>
+                    
+                </div>
+            </div>
+            
+        <% } }); %>
+        
+    </div>
+    <p class="small text-center pb-4 muted">Forecast provided by <a class='muted' href="https://www.wunderground.com/?apiref=906c96c4bb4ea25d">Weather Underground</a></p>
+    <% } %>
+    
+    
+<script src="/scripts/location.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcjkKAD8wUDIsg4FDC0t8_FGVgCoD-MrA&libraries=places&callback=initSearch"
+        async defer></script>
+        
+
+
+
+<% include ../partials/footer %>

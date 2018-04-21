@@ -1,0 +1,85 @@
+<!-- User index page for admin to manage users in group -->
+
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+
+<% include ../partials/nav %>
+
+<div class="container">
+    <ul class="nav nav-pills d-flex mb-2" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="true">Users</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pending-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="false">Pending</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+            
+            <div class="row mx-0 justify-content-start">
+                
+                <% users.forEach(function(user) {%>
+                    
+                    <% if( user.isActive ) { %>
+                        <div class="card mb-3 mx-0 mx-md-3">
+                            <h5 class="card-header">Company: <%= user.group %></h5>
+                            <div class="card-body">
+                                <p class="card-title mb-2">Name: <%= user.name %></p>
+                                <p class="card-text mb-2">Email: <%= user.email %></p>
+                                <p class="card-text mb-4">Admin: <%= user.isAdmin %></p>
+                                <% if( currentUser.name != user.name ) { %>
+                                    <% if ( user.isAdmin ) {%>
+                                        <form class="card-link" action="/users/<%= user._id %>/makenotadmin" method="POST">
+                                            <button class="btn btn-md btn-danger" onClick="return confirm('Are you absolutely sure you want to remove admin privileges?')">Revoke User</button>
+                                        </form>
+                                    <% } else { %>
+                                        <form class="card-link" action="/users/<%= user._id %>/makeadmin" method="POST">
+                                            <button class="btn btn-md btn-danger">Make Admin</button>
+                                        </form>
+                                    <% } %>
+                                    <form class="card-link" action="/users/<%= user._id %>/makeinactive" method="POST">
+                                        <button class="btn btn-md btn-danger" onClick="return confirm('Are you absolutely sure you want to remove the user from your group?')">Remove User</button>
+                                    </form>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }%>
+                    
+                <% }); %>
+                
+            </div>
+            
+        </div>
+        <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="row mx-0 justify-content-around">
+                <% users.forEach(function(user) {%>
+                    
+                    <% if( !user.isActive ) { %>
+                    
+                        <div class="card mb-3 mx-0 mx-md-3">
+                            <h5 class="card-header">Company: <%= user.group %></h5>
+                            <div class="card-body">
+                                <p class="card-title mb-2">Name: <%= user.name %></p>
+                                <p class="card-text mb-4">Email: <%= user.email %></p>
+                                <form class=" card-link" action="/users/<%= user._id %>/addtogroup" method="POST">
+                                    <button class="btn btn-md btn-danger">Accept User</button>
+                                </form>
+                                <form class=" card-link" action="/users/<%= user._id %>/removefromgroup" method="POST">
+                                    <button class="btn btn-md btn-danger" onClick="return confirm('Are you absolutely sure you want to remove the user from your group permanently?')">Reject User</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }%>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<% include ../partials/footer %>

@@ -1,0 +1,53 @@
+<% include ../partials/header %>
+
+<!-- Scrolling tabs -->
+<link rel='stylesheet' type="text/css" href="/stylesheets/jquery.scrolling-tabs.min.css"></link>
+
+<link rel='stylesheet' type="/text/css" href="/stylesheets/models.css"></link>
+
+<% include ../partials/nav %>
+
+<div class="container">
+  
+  <% let objects = [
+    { location: 'Atlantic Ocean', name: 'atlantic', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaehatl.gif'},
+    { location: 'Caribbean', name: 'caribbean', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaecar.gif'},
+    { location: 'Gulf of Mexico I', name:'gulf1', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ir/isagul.gif'},
+    { location: 'Gulf of Mexico II', name: 'gulf2', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/vis/isavcamt.gif'}, 
+    { location: 'West GoM', name: 'westGulf', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaetxs.gif'}, 
+    { location: 'East GoM', name: 'eastGulf', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaefl_.gif'}, 
+    { location: 'Southeast US', name: 'SEUS', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaese.gif'}, 
+    { location: 'Mexico', name: 'mexico', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaemex.gif'}, 
+    { location: 'Central America', name: 'central', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaecam.gif'}, 
+    { location: 'Lesser Antilles', name: 'lesser', url: 'https://sirocco.accuweather.com/sat_mosaic_640x480_public/ei/isaeatle.gif'}, 
+    ];%>
+  
+  <ul class="nav nav-pills mb-3" id="myTab" role="tablist">
+    <% objects.forEach(function(obj, i){ %>
+      <li class="nav-item">
+        <% var active = ( i == 0 ) ? "active" : ""; %>
+        <% var selected = ( i == 0 ) ? "true" : "false"; %>
+        <a class="nav-link <%= active %>" id="<%= obj.name %>-tab" 
+          data-toggle="tab" href="#<%= obj.name %>" role="tab" 
+          aria-controls="<%= obj.location %>" aria-selected="<%= selected %>">
+            <%= obj.location%>
+        </a>
+      </li>
+    <% }); %>
+  </ul>
+  
+  <div class="tab-content" id="myTabContent">
+    <% objects.forEach(function(obj, i){ %>
+      <% var active = ( i == 0 ) ? "show active" : ""; %>
+      <div class="tab-pane fade <%= active %>" id="<%= obj.name %>" role="tabpanel" aria-labelledby="<%= obj.name %>-tab">
+        <img class="img-fluid mx-auto d-block rounded" src="<%= obj.url %>"></img>
+      </div>
+    <% }); %>
+  </div>
+    
+</div>
+
+<script src='/scripts/jquery.scrolling-tabs.min.js'></script>
+<script src='/scripts/scrolling.js'></script>
+
+<% include ../partials/footer %>

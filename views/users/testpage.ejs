@@ -1,0 +1,56 @@
+<!-- User settings page -->
+
+<% include ../partials/header %>
+
+<link rel="stylesheet" href="./stylesheets/usersettings.css"></link>
+<link rel="stylesheet" href="./stylesheets/forms.css"></link>
+
+<% include ../partials/nav %>
+
+<div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#group" role="tab" aria-controls="group" aria-selected="false">Group</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#password" role="tab" aria-controls="password" aria-selected="false">Password</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#deleteProfile" role="tab" aria-controls="delete profile" aria-selected="false">Delete Profile</a>
+      </li>
+    </ul>
+    
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div>
+                
+                <form class="form-class" method="POST" action="/register">
+  
+                  <div class="text-center mb-4">
+                      <h1 class="h3 mb-3 font-weight-normal">User Profile</h1>
+                  </div>
+                
+                  <div class="form-label-group">
+                      <input type="text" id="inputName" name="name" class="form-control" value="<%= user.name %>" required="true">
+                      <label for="inputName">Name</label>
+                  </div>
+                  
+                  <div class="form-label-group">
+                      <input type="email" id="inputEmail" name="email" class="form-control" value="<%= user.email%>" required="true">
+                      <label for="inputEmail">Email address</label>
+                  </div>
+                  
+            </div>
+        </div>
+        <div class="tab-pane fade" id="group" role="tabpanel" aria-labelledby="group-tab">Group</div>
+        <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">Password</div>
+        <div class="tab-pane fade" id="deleteProfile" role="tabpanel" aria-labelledby="deleteProfile-tab">Delete Profile</div>
+    </div>    
+</div>
+
+
+<script src="/scripts/scripts.js"></script>
+<% include ../partials/footer %>

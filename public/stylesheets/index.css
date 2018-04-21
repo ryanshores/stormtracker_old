@@ -1,0 +1,24 @@
+.card {
+    margin: 10px;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.card form {
+    display: inline;
+}
+
+.list-group {
+    margin-top: 10px;
+}
+
+.card-header {
+    font-size: 1.1rem;
+}
+
+
+@media screen and (min-width: 768px) {
+    .card {
+        width: 20rem;
+    }
+}

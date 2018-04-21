@@ -1,0 +1,13 @@
+.nav-tabs .nav-link.active {
+
+}
+
+.nav-pills {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+#submitBtn, #passwordDiv {
+  transition: display 2s;
+}

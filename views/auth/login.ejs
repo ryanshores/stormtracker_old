@@ -1,0 +1,29 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/forms.css">
+
+<% include ../partials/nav %>
+
+<form class="form-class" method="POST" action="/login">
+    <div class="text-center mb-4 mt-3">
+        <img class="mb-4 STlogo img-fluid" src="/images/logo_st.png" alt="" height="72">
+        <h5 class="mb-3 font-weight-normal">Please Login</h5>
+    </div>
+
+    <div class="form-label-group">
+        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+        <label for="inputEmail">Email Address</label>
+    </div>
+
+    <div class="form-label-group">
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+        <label for="inputPassword">Password</label>
+        <a href="/forgot" class="form-text">Forgot password</a>
+    </div>
+
+    <button class="btn btn-lg btn-outline-dark btn-block" type="submit">Sign In</button>
+    <a href="/register" class="btn btn-lg btn-outline-dark btn-block">Register</a>
+</form>
+
+
+<% include ../partials/footer %>

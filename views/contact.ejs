@@ -1,0 +1,35 @@
+<% include ./partials/header %>
+
+<link rel="stylesheet" href="/stylesheets/forms.css"></link>
+
+<% include ./partials/nav %>
+
+<form class="form-class" action="/contact" method="POST" id="siteForm">
+    
+    <div class="text-center mb-4 mt-3">
+        <img class="mb-4 STlogo img-fluid" src="/images/logo_st.png" alt="" height="72">
+        <h1 class="h5 mb-3 font-weight-normal">Contact Us</h1>
+    </div>
+        
+    <div class="form-label-group">
+        <input type="text" name="name" id="inputName" class="form-control" placeholder="Email address" required="" autofocus="">    
+        <label for="inputName">Full Name</label>
+    </div>
+    
+    <div class="form-label-group">
+        <input required class="form-control" type="email" placeholder="email address" name="email" id="inputEmail">    
+        <label for="inputEmail">Email Address</label>
+    </div>
+    
+    <div class="form-group">
+        <textarea class="form-control" id="textarea" rows="4" name="inputText" placeholder="Your Message" style="font-size:1.1rem;"></textarea>
+    </div>
+    
+    <div class="form-group">
+        <button class="btn btn-lg btn-outline-dark btn-block">Submit</button>
+    </div>
+    
+</form> 
+
+
+<% include ./partials/footer %>

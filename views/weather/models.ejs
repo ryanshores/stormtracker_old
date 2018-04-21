@@ -1,0 +1,103 @@
+<% include ../partials/header %>
+<link rel="stylesheet" href="/stylesheets/models.css"></link>
+<!-- Scrolling tabs -->
+<link rel='stylesheet' type="text/css" href="/stylesheets/jquery.scrolling-tabs.min.css"></link>
+<% include ../partials/nav %>
+
+<div class="container">
+    
+    <ul class="nav nav-pills mb-3" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="pressure-tab" data-toggle="tab" href="#pressure" role="tab" aria-controls="Pressure" aria-selected="true">Pressure</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="gust-tab" data-toggle="tab" href="#gust" role="tab" aria-controls="gust" aria-selected="false">Wind Gusts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="waves-tab" data-toggle="tab" href="#waves" role="tab" aria-controls="waves" aria-selected="false">Waves</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="surfaceTemp-tab" data-toggle="tab" href="#surfaceTemp" role="tab" aria-controls="Sea Surface Temp" aria-selected="false">Sea Temperature</a>
+      </li>
+      <li classs="nav-item">
+        <a class="nav-link" id="more-tab" data-toggle="tab" href="#more" role="tab" aria-controls="More Tab"  aria-selected="false">More</a>
+      </li>
+      <!--<li class="nav-item">-->
+      <!--  <a class="nav-link" id="anomoly-tab" data-toggle="tab" href="#anomoly" role="tab" aria-controls="SST Anomoly" aria-selected="false">SST Anomoly</a>-->
+      <!--</li>-->
+      <!--<li class="nav-item">-->
+      <!--  <a class="nav-link" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="Ocean Currents" aria-selected="false">Ocean Currents</a>-->
+      <!--</li>-->
+      <!--<li class="nav-item">-->
+      <!--  <a class="nav-link" id="tide-tab" data-toggle="tab" href="#tide" role="tab" aria-controls="Tide and Surge" aria-selected="false">Tide + Surge</a>-->
+      <!--</li>-->
+    </ul>
+    
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="pressure" role="tabpanel" aria-labelledby="pressure-tab">
+          <iframe class="rounded" src="https://mywindy.com/ryanshores/pressure" style="width: 100%; height: 65vh; border: none;"></iframe>
+      </div>
+      <div class="tab-pane fade" id="gust" role="tabpanel" aria-labelledby="gust-tab">
+          <iframe class="rounded" src="https://mywindy.com/ryanshores/gusts" style="width: 100%; height: 65vh; border: none;"></iframe>
+      </div>
+      <div class="tab-pane fade" id="waves" role="tabpanel" aria-labelledby="waves-tab">
+          <iframe class="rounded" src="https://mywindy.com/ryanshores/waves" style="width: 100%; height: 65vh; border: none;"></iframe>
+      </div>
+      <div class="tab-pane fade" id="surfaceTemp" role="tabpanel" aria-labelledby="surfaceTemp-tab">
+          <iframe class="rounded" src="https://mywindy.com/ryanshores/sst" style="width: 100%; height: 65vh; border: none;"></iframe>
+      </div>
+      <div class="tab-pane fade" id="more" role="tabpanel" aria-labelledb="more-tab">
+        <% let items = [ 
+              {
+                  name: 'Vertical Wind Shear', 
+                  url: "http://tropic.ssec.wisc.edu/real-time/atlantic/winds/wg8shr.GIF",
+                  description: 'Explanation of picture.'},
+              {
+                  name: 'Vertical Wind Shear Tendancy', 
+                  url: "http://tropic.ssec.wisc.edu/real-time/atlantic/winds/wg8sht.GIF",
+                  description: 'Explanation of picture.'
+              },
+              {
+                  name: 'Dry Air', 
+                  url: "https://sirocco.accuweather.com/sat_mosaic_640x480_public/wv/isawvchatl.gif",
+                  description: 'Explanation of picture.'
+              },
+              {
+                  name: 'ENSO', 
+                  url: "https://iri.columbia.edu/wp-content/uploads/2018/04/figure4-3.png",
+                  description: 'Explanation of picture.'
+              }
+        ]; %>
+        <div class="row" style="width:100%;">
+          <% items.forEach(function(item){ %>
+              <div class="col-md-6 col-lg-4 px-0">
+                  <div class="card mx-0 mx-md-3 mb-4">
+                      <img class="card-img-top" src="<%= item.url %>"></img>
+                      <div class="card-body">
+                          <p class="card-text"><%= item.description %></p>
+                          <div class="d-flex justify-content-between align-items-center">
+                              <!--<a class="btn btn-sm btn-outline-secondary" href="<%= item.url %>" target="_blank">View</a>-->
+                              <small class="text-muted"><%= item.name %></small>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          <% }); %>
+        </div>
+      </div>
+      <!--<div class="tab-pane fade" id="anomoly" role="tabpanel" aria-labelledby="anomoly-tab">-->
+      <!--    <iframe src="https://mywindy.com/ryanshores/sstanom" style="width: 100%; height: 60vh; border: none;"></iframe>-->
+      <!--</div>-->
+      <!--<div class="tab-pane fade" id="current" role="tabpanel" aria-labelledby="current-tab">-->
+      <!--    <iframe src="https://mywindy.com/ryanshores/currents" style="width: 100%; height: 60vh; border: none;"></iframe>-->
+      <!--</div>-->
+      
+      <!--<div class="tab-pane fade" id="tide" role="tabpanel" aria-labelledby="tide-tab">...</div>-->
+    
+</div>
+
+<!-- Scrolling tabs -->
+<script src='/scripts/jquery.scrolling-tabs.min.js'></script>
+<script src='/scripts/scrolling.js'></script>
+
+<%  include ../partials/footer %>

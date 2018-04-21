@@ -1,0 +1,11 @@
+<h1>RSS Test</h1>
+
+<p><%= feed['title'] %></p>
+
+<% feed['items'].forEach(function(item){ %>
+    <% console.log(item)%>
+    <% if( item.title.indexOf("Summary") >= 0 ) { %>
+        <% console.log(item)%>
+        <p>Description: <%= item.description %></p>
+    <% } %>
+<% }) %>

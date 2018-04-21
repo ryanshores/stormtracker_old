@@ -1,0 +1,15 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/pdf.css">
+
+<% include ../partials/nav %>
+
+<div class="container">
+  <div id="pdf"></div>
+</div>
+
+
+<script src="/scripts/pdfobject.min.js"></script>
+<script>PDFObject.embed("/pdf/test.pdf", "#pdf");</script>
+
+<% include ../partials/footer %>

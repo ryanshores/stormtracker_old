@@ -1,0 +1,269 @@
+<% include ../partials/header %>
+
+<link rel="stylesheet" href="/stylesheets/map.css"></link>
+<link rel="stylesheet" href="/stylesheets/index.css"></link>
+
+<% include ../partials/nav %>
+
+<% let activeStorms = [];%>
+<% storms.forEach(function( storm ){ %>
+  <% storm.isDup = false; %>
+  <% activeStorms.forEach(function( activeStorm ){ %>
+    <% if( activeStorm == storm.name ) { %>
+      <% storm.isDup = true %>
+    <% } %>
+  <% }); %>
+  <% activeStorms.push( storm.name ) %>
+<% }); %>
+
+<div class="container p-sm-0">
+  <!-- Nav tabs -->
+  <ul class="nav nav-pills mb-2" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="storms-tab" data-toggle="tab" href="#storms" role="tab" aria-controls="Storms" aria-selected="true">Current Storms</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="example-tab" data-toggle="tab" href="#example" role="tab" aria-controls="Example" aria-selected="false">Example</a>
+    </li>
+  </ul>
+  
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="storms" role="tabpanel" aria-labelledby="storms-tab">
+      <div class="row">
+        <div class="col">
+          <div class="row mx-auto">
+            <% storms.forEach(function(storm){ %>
+              <% if(storm.isDup != true) { %>
+                <div class="card mb-3 stormCard mx-auto mx-md-3 mx-xl-auto">
+                  <div class="card-header">
+                    <h5 class="d-inline"><%= storm.name %></h5>
+                    <h5 class="text-right d-inline">(CAT <%= storm.category %>)</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="row no-gutters mb-3">
+                      <div class="col">
+                        <div class="row ">
+                          <div class="col-2 pl-2"><i class="fas fa-forward weatherIcon" data-fa-transform="down-6"></i></div>
+                          <div class="col-9">
+                            <div class="row text-muted small ml-0">Speed (mph)</div>
+                            <div class="row ml-0 norm"><%= storm.fspeed %></div>
+                          </div>  
+                        </div>
+                        
+                      </div>
+                      <div class="col">
+                        <div class="row ">
+                          <div class="col-2"><i class="fas fa-compass weatherIcon" data-fa-transform="down-6"></i></div>
+                          <div class="col-9">
+                            <div class="row text-muted small ml-0">Direction</div>
+                            <div class="row ml-0 norm"><%= storm.direction %>°</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="row ">
+                          <div class="col-2"><i class="fas fa-map-marker weatherIcon" data-fa-transform="down-6"></i></div>
+                          <div class="col-9 pr-0">
+                            <div class="row text-muted small ml-0">Location</div>
+                            <div class="ml-0 norm"><%= storm.lat %>°, <%= storm.lng %>°</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row no-gutters">
+                      <div class="col">
+                        <div class="row ">
+                          <div class="col-2 d-flex align-items-center pl-2"><img class="weatherIcon" src="/icons/wind.png"></div>
+                          <div class="col-9">
+                            <div class="row text-muted small ml-0">Wind (mph)</div>
+                            <div class="row ml-0 norm"><%= storm.wind %> mph</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="row ">
+                          <div class="col-2 d-flex align-items-center"><img class="weatherIcon" src="/icons/gust.png"></div>
+                          <div class="col-9">
+                            <div class="row text-muted small ml-0">Gusts (mph)</div>
+                            <div class="row ml-0 norm"><%= storm.gusts %></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="row ">
+                          <div class="col-2 d-flex align-items-center"><img class="weatherIcon" src="/icons/pressure.png"></div>
+                          <div class="col-9 pr-0">
+                            <div class="row text-muted small ml-0">Pressure</div>
+                            <div class="row ml-0 norm"><%= storm.pressure %></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            <% }); %>
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-8">
+          <div id="map" class="map mt-0 mt-lg-2 rounded"></div> 
+          <div class="row align-items-center align-items-stretch" style="margin: 0;">
+            <div class="col text-center shadow" style="background: #46719A">TS</div>
+            <div class="col text-center shadow" style="background: #3AAD00">CAT 1</div>
+            <div class="col text-center shadow" style="background: #FFFD03">CAT 2</div>
+            <div class="col text-center shadow" style="background: #FFAC00">CAT 3</div>
+            <div class="col text-center shadow" style="background: #E5521C">CAT 4</div>
+            <div class="col text-center shadow" style="background: #7F0B99">CAT 5</div>
+          </div>
+          <p class="credited mt-3 text-center muted">Data provided by 
+          <a class="muted" href="https://www.wunderground.com/?apiref=906c96c4bb4ea25d">Wunderground</a>
+          and the 
+          <a class="muted" href="https://www.nhc.noaa.gov/">NHC</a></p>      
+        </div>
+    </div>
+    </div>
+    <div class="tab-pane" id="example" role="tabpanel" aria-labelledby="example-tab">
+      <% var cards = [
+        {title: 'Track Guidance', desc: 'Description', url: '/storms/Iris/iris_track.png'},
+        {title: 'Intensity Guidance', desc: 'Description', url: '/storms/Iris/iris_intensity.png'},
+
+      ];%>
+      <div class="row" style="width:100%;">
+        <% cards.forEach(function(card){ %>
+          <div class="col-md-4">
+              <div class="card mb-4">
+                  <img class="card-img-top" src="<%= card.url %>"></img>
+                  <div class="card-body">
+                      <p class="card-text"><%= card.desc %></p>
+                      <div class="d-flex justify-content-between align-items-center">
+                          <!--<a class="btn btn-sm btn-outline-secondary" href="/storms/Iris/iris_track.png" target="_blank">View</a>-->
+                          <small class="text-muted"><%= card.title %></small>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var map;
+function initMap() {
+  
+  // Get the storms passed from the server
+  var storms = JSON.parse('<%- JSON.stringify(storms) %>');
+  // setup the map of all storms
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 3,
+    center: new google.maps.LatLng(21.5, -70),
+    mapTypeId: 'satellite'
+  });
+  
+  // // Layers
+  // var coneLayer = new google.maps.KmlLayer({
+  //   url: 'https://www.nhc.noaa.gov/gis/examples/AL112017_020adv_CONE.kmz',
+  //   map: map,
+  //   preserveViewport: true
+  // });
+  // console.log('Cone Layer: ' + coneLayer);
+  // console.log(google.maps.Polyline(coneLayer));
+  // var conePoly = new google.maps.Polygon({
+  //   path: google.maps.Polyline(coneLayer);
+  // });
+  
+  // Storms
+  storms.forEach(function(storm){
+    var contentWindow =
+      '<p>Name: ' + storm.name + '</p>' +
+      '<p>Category: ' + storm.category + '</p>' + 
+      '<p>Coordinates: ' + storm.lat + ', ' + storm.lng + '</p>' +
+      '<p>Speed: ' + storm.fspeed + '</p>' +
+      '<p>Direction: ' + storm.direction + '</p>';
+    var infoWindow = new google.maps.InfoWindow({
+        content: contentWindow
+    });
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(storm.lat, storm.lng),
+        map: map,
+        title: "Storm",
+        icon: '/icons/cat' + storm.category + '.png'
+    });  
+    marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+    });
+    google.maps.event.addListener(map, "click", function(event) {
+      infoWindow.close();
+    });
+    
+    // add forecasts to map
+    storm['Forecast'].forEach(function(forecast){
+      var contentWindow =
+        '<p>Name: ' + storm.name + '</p>' +
+        '<p>Hour: ' + forecast.hour + '</p>' + 
+        '<p>Category: ' + forecast.category + '</p>' + 
+        '<p>Coordinates: ' + forecast.lat + ', ' + forecast.lng + '</p>';
+      var infoWindow = new google.maps.InfoWindow({
+          content: contentWindow
+      });
+      var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(forecast.lat, forecast.lng),
+          map: map,
+          title: "Storm",
+          icon: "/icons/cat" + forecast.category + ".png"
+      });  
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
+      google.maps.event.addListener(map, "click", function(event) {
+        infoWindow.close();
+      });
+    });
+  });
+  // Assets
+  <% if ( sites.length > 0 ) { %>
+    var sites = JSON.parse('<%- JSON.stringify(sites) %>');
+    sites.forEach(function(site){
+      var contentWindow = site.properties.name;
+      var infoWindow = new google.maps.InfoWindow({
+          content: contentWindow
+      });
+      
+      var coords = new google.maps.LatLng(site.geometry.coordinates[1], site.geometry.coordinates[0]);
+      // var resultColor = 
+      //     google.maps.geometry.poly.containsLocation(coords, coneLayer) ?
+      //       'red' :
+      //       'blue';
+      
+      var marker = new google.maps.Marker({
+          position: coords,
+          map: map,
+          title: "Place: " + site.properties.name,
+          icon:  {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 3,
+            strokeColor: 'white',
+            strokeWeight: 2
+          }
+      });
+      marker.addListener('click', function() {
+          infoWindow.open(map, marker);
+      });
+      google.maps.event.addListener(map, "click", function(event) {
+        infoWindow.close();
+      });
+    });
+  <% } %>
+}; 
+</script>
+
+
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcjkKAD8wUDIsg4FDC0t8_FGVgCoD-MrA&callback=initMap"></script>
+
+
+<% include ../partials/footer %>
