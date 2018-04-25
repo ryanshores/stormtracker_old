@@ -6,6 +6,19 @@
     <h1 class="">Update Asset</h1>
     <div class="pb-5">
         <form class="group p-3" action="/sites/<%= site._id %>?_method=PUT" method="POST" id="siteForm">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Type</span>
+                </div>
+                <select required class="input custom-select" name="type" form="siteForm">
+                    <option disabled hidden>Select the type of site</option>
+                    <% let options = [ "Platform", "MODU", "Deepwater", "Other" ]; %>
+                    <% options.forEach(function(option){ %>
+                        <% var selected = ( site.properties.type == option ) ? "selected" : "";%>
+                        <option value="<%= option %>" <%= selected %> ><%= option %></option>
+                    <% }); %>
+                </select>   
+            </div>
             <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
                 'GA', 'GB', 'GC', 'GI', 'HI', 'KC', 'MC', 'MI', 'MO', 'MP', 'MU', 'PL',
                 'PN', 'PS', 'SA', 'SM', 'SP', 'SS', 'ST', 'VK', 'VR', 'WC', 'WD', 'WR']; %>
@@ -140,19 +153,6 @@
                         aria-label="<%= attr.name %>" step=<%= attr.step %>>
                 </div>
             <% }); %>
-            <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Type</span>
-                    </div>
-                    <select required class="input custom-select" name="type" form="siteForm">
-                        <option disabled hidden>Select the type of site</option>
-                        <% let options = [ "Platform", "MODU", "Deepwater", "Other" ]; %>
-                        <% options.forEach(function(option){ %>
-                            <% var selected = ( site.properties.type == option ) ? "selected" : "";%>
-                            <option value="<%= option %>" <%= selected %> ><%= option %></option>
-                        <% }); %>
-                    </select>   
-                </div>
             <button type="submit" class="btn btn-success float-right removeBtn">Update Asset</button>
         </form>
     </div>

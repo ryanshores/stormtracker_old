@@ -6,6 +6,18 @@
     <h1 class="">Add New Asset</h1>
     <div class="pb-5">
         <form class="group p-3" action="/sites/new" method="POST" id="siteForm">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Type</span>
+                </div>
+                <select required class="input custom-select" name="type" form="siteForm" id="inputTypeOfSite">
+                    <option disabled hidden>Select the type of site</option>
+                    <option value="Platform">Platform</option>
+                    <option value="MODU">MODU</option>
+                    <option value="Deepwater">Deep Water</option>
+                    <option value="Other">Other</option>
+                </select>   
+            </div>
             <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
                 'GA', 'GB', 'GC', 'GI', 'HI', 'KC', 'MC', 'MI', 'MO', 'MP', 'MU', 'PL',
                 'PN', 'PS', 'SA', 'SM', 'SP', 'SS', 'ST', 'VK', 'VR', 'WC', 'WD', 'WR'] %>
@@ -126,18 +138,6 @@
                     step="<%= attr.step %>">
                 </div>
             <% }); %>
-            <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Type</span>
-                    </div>
-                    <select required class="input custom-select" name="type" form="siteForm" id="inputTypeOfSite">
-                        <option disabled hidden>Select the type of site</option>
-                        <option value="Platform">Platform</option>
-                        <option value="MODU">MODU</option>
-                        <option value="Deepwater">Deep Water</option>
-                        <option value="Other">Other</option>
-                    </select>   
-                </div>
             <button type="submit" class="btn btn-success float-right removeBtn">Add Asset</button>
         </form>
     </div>
