@@ -5,83 +5,97 @@
 <% include ../partials/nav %>
 
 <div class="container">
-    <a href="/sites">&lt;&lt; Go Back</a>
+    <h1 class="">Add New Asset</h1>
+    <div>
+        <form class="group p-3" action="/sites/<%= site._id %>?_method=PUT" method="POST" id="siteForm">
+            <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
+                'GA', 'GB', 'GC', 'GI', 'HI', 'KC', 'MC', 'MI', 'MO', 'MP', 'MU', 'PL',
+                'PN', 'PS', 'SA', 'SM', 'SP', 'SS', 'ST', 'VK', 'VR', 'WC', 'WD', 'WR']; %>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Area Code</span>
+                </div>
+                <select class="custom-select" name="areaCode" form="siteForm">
+                    <option disabled hidden>Select the area code</option>
+                    <% areas.forEach(function(area){ %>
+                        <% var selected = ( site.properties.areaCode == area ) ? "selected" : ""; %>
+                        <option value="<%= area %>" <%= selected %> ><%= area %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <% let attributes = [
+                    {
+                        name: 'Block Number',
+                        short: 'blockNumber',
+                        type: 'number',
+                        value: site.properties.blockNumber
+                    },
+                    {
+                        name: 'Field',
+                        short: 'field',
+                        type: 'text',
+                        value: site.properties.field
+                    },
+                    {
+                        name: 'Structure Name',
+                        short: 'name',
+                        type: 'text',
+                        value: site.properties.name
+                    },
+                    {
+                        name: 'Latitude',
+                        short: 'lat',
+                        type: 'number',
+                        value: site.geometry.coordinates[1],
+                        step: 0.00000001
+                        
+                    },
+                    {
+                        name: 'Longitude',
+                        short: 'lng',
+                        type: 'number',
+                        value: site.geometry.coordinates[0],
+                        step: 0.00000001
+                    },
+                    {
+                        name: 'Air Gap',
+                        short: 'airGap',
+                        type: 'number',
+                        value: site.properties.airGap
+                    },
+                    {
+                        name: 'Water Depth',
+                        short: 'depth',
+                        type: 'number',
+                        value: site.properties.waterDepth
+                    },
+                ];%>
+            <% attributes.forEach(function(attr){ %>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><%= attr.name %></span>
+                    </div>
+                    <input name="<%= attr.short %>" type="<%= attr.type %>" 
+                        class="form-control input" value="<%= attr.value %>" 
+                        aria-label="<%= attr.name %>" step=<%= attr.step %>>
+                </div>
+            <% }); %>
+            <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Type</span>
+                    </div>
+                    <select required class="input custom-select" name="type" form="siteForm">
+                        <option disabled hidden>Select the type of site</option>
+                        <% let options = [ "Platform", "MODU", "Deepwater", "Other" ]; %>
+                        <% options.forEach(function(option){ %>
+                            <% var selected = ( site.properties.type == option ) ? "selected" : "";%>
+                            <option value="<%= option %>" <%= selected %> ><%= option %></option>
+                        <% }); %>
+                    </select>   
+                </div>
+            <button type="submit" class="btn btn-success float-right removeBtn">Add Asset</button>
+        </form>
+    </div>
 </div>
-
-<form class="form-class" action="/sites/<%= site._id %>?_method=PUT" method="POST" id="siteForm">
-
-    <div class="text-center mb-4">
-        <img class="mb-4 STlogo img-fluid" src="/images/logo_st.png" alt="" height="72">
-        <h1 class="h3 mb-3 font-weight-normal">Edit <%= site.properties.name %></h1>
-    </div>
-    
-    <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
-            'GA', 'GB', 'GC', 'GI', 'HI', 'KC', 'MC', 'MI', 'MO', 'MP', 'MU', 'PL',
-            'PN', 'PS', 'SA', 'SM', 'SP', 'SS', 'ST', 'VK', 'VR', 'WC', 'WD', 'WR'] %>
-    <div class="form-group">
-        <label for="inputTypeOfSite">Select the area code of the asset</label>
-        <select class="custom-select" name="areaCode" form="siteForm">
-            <option value="">Select the area code of the asset</option>
-            <%
-            for ( var i = 0; i < areas.length; i++ )
-            {
-                var selected = ( site.properties['areaCode'] == areas[i] ) ? "selected" : "";
-                %>
-                <option value="<%= areas[i] %>" <%= selected %>><%= areas[i] %></option><%
-            }
-            %>
-        </select>
-    </div>
-    
-    <div class="form-label-group">
-      <input type="number" id="inputBlockNumber" name="blockNumber" class="form-control" value="<%= site.properties['blockNumber']%>"  step="1">
-      <label for="inputBlockNumber">Enter the block number of the asset</label> 
-    </div>
-  
-    <div class="form-label-group">
-      <input type="text" id="inputfield" name="field" class="form-control" value="<%= site.properties['field']%>" >
-      <label for="inputfield">Enter the field of the asset</label> 
-    </div> 
-    
-    <div class="form-label-group">
-        <input id="inputName" class="form-control" name="name" type="text" value="<%= site.properties.name %>" >    
-        <label for="inputName">Edit the name of the site</label>
-    </div>
-    
-    <div class="form-label-group">
-        <input id="inputLat" class="form-control" name="lat" type="number" value="<%= site.geometry.coordinates[1] %>"  step="0.00000001">    
-        <label for="inputLat">Edit the latitude of the site</label>
-    </div>
-    
-    <div class="form-label-group">
-        <input id="inputLng" class="form-control" name="lng" type="number" value="<%= site.geometry.coordinates[0] %>"  step="0.00000001">
-        <label for="inputLng">Edit the longitude of the site</label>
-    </div>
-    
-    <div class="form-label-group">
-      <input type="number" id="inputAirGap" name="airGap" class="form-control" value="<%= site.properties.airgap %>"  step="0.5">
-      <label for="inputAirGap">Edit the Air Gap (feet)</label>
-    </div>
-    
-    <div class="form-group">
-        <label for="inputTypeOfSite">Select the type of site</label>
-        <select class="custom-select" name="type" form="siteForm">
-            <option value="">Select the type of site</option>
-            <%
-            var options = [ "Platform", "MODU", "Deepwater", 'Other' ];
-            for ( var i = 0; i < options.length; i++ )
-            {
-                var selected = ( site.properties.type == options[i] ) ? "selected" : "";
-                %>
-                <option value="<%= options[i] %>" <%=selected %>><%= options[i] %></option><%
-            }
-            %>
-        </select>
-    </div>
-    
-    <div class="form-group">
-        
-    <button class="btn btn-lg btn-outline-dark btn-block">Submit!</button>
-</form> 
 
 <% include ../partials/footer %>
