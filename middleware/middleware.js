@@ -53,6 +53,6 @@ middlewareObj.getGeoJSON = function getGeoJSON(sites){
        locs.push(site.location); 
     });
     return locs;
-}
+};
 
 module.exports = middlewareObj;

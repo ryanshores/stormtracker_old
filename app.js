@@ -1,7 +1,3 @@
-// app.js
-
-// BASE SETUP
-// ============================================
 var express         = require('express'),
     app             = express(),
     mongoose        = require("mongoose"),
@@ -25,6 +21,18 @@ var indexRoutes     =   require("./routes/index"),
     userRoutes      =   require("./routes/users"),
     weatherRoutes   =   require("./routes/weather"),
     newSiteRoutes   =   require("./routes/newsites");
+    
+// Email functions
+var emailer =  require('./emails/emailer.js');
+
+var email = {
+    toEmail: [
+        'ryan.shores@me.com',
+        'ryanshores@us.matdan.com'
+        ],
+    toSubject: "Hurricane Bri",
+};
+// emailer.sendNewActivity(email.toEmail, email.toSubject);
     
 
 // App setup
@@ -79,20 +87,6 @@ app.use('/sites', siteRoutes);
 app.use('/users', userRoutes);
 app.use('/weather', weatherRoutes);
 app.use('/newsites', newSiteRoutes);
-
-
-// // using SendGrid's v3 Node.js Library
-// // https://github.com/sendgrid/sendgrid-nodejs
-// const sgMail = require('@sendgrid/mail');
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-// const msg = {
-//   to: 'test@example.com',
-//   from: 'test@example.com',
-//   subject: 'Sending with SendGrid is Fun',
-//   text: 'and easy to do anywhere, even with Node.js',
-//   html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-// };
-// sgMail.send(msg);
 
 
 // START THE SERVER
