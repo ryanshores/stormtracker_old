@@ -69,6 +69,68 @@
                         type: 'number',
                         value: site.properties.waterDepth
                     },
+                    {
+                        name: "Working Interest - %",
+                        short: "workingInt",
+                        type: "number",
+                        value: site.properties.workingInt,
+                        step: 0.01,
+                        min: 0,
+                        max: 100
+                    },
+                    {
+                        name: "PD - $",
+                        short: "pd",
+                        type: "number",
+                        value: site.properties.pd,
+                        step: 0.01
+                    },
+                    {
+                        name: "ROD - % of PD",
+                        short: "rod",
+                        type: "number",
+                        value: site.properties.rod,
+                        step: 0.01,
+                        min: 0,
+                        max: 100
+                    },
+                    {
+                        name: "S&L - % of PD",
+                        short: "sl",
+                        type: "number",
+                        value: site.properties.sl,
+                        step: 0.01,
+                        min: 0,
+                        max: 100
+                    },
+                    {
+                        name: "OEE - $",
+                        short: "oee",
+                        type: "number",
+                        value: site.properties.oee,
+                        step: 0.01
+                    },
+                    {
+                        name: "LOPI - $",
+                        short: "lopi",
+                        type: "number",
+                        value: site.properties.lopi,
+                        step: 0.01
+                    },
+                    {
+                        name: "Windstorm CSL - $",
+                        short: "windstormCSL",
+                        type: "number",
+                        value: site.properties.windstormCSL,
+                        step: 0.01
+                    },
+                    {
+                        name: "Windstorm Retention - $",
+                        short: "windstormRet",
+                        type: "number",
+                        value: site.properties.windstormRet,
+                        step: 0.01
+                    },
                 ];%>
             <% attributes.forEach(function(attr){ %>
                 <div class="input-group mb-3">

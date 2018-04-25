@@ -4,7 +4,7 @@
 
 <div class="container">
     <h1 class="">Add New Asset</h1>
-    <div>
+    <div class="pb-5">
         <form class="group p-3" action="/sites/new" method="POST" id="siteForm">
             <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
                 'GA', 'GB', 'GC', 'GI', 'HI', 'KC', 'MC', 'MI', 'MO', 'MP', 'MU', 'PL',
@@ -40,21 +40,79 @@
                         name: 'Latitude',
                         short: 'lat',
                         type: 'number',
+                        step: 0.00000001
                     },
                     {
                         name: 'Longitude',
                         short: 'lng',
                         type: 'number',
+                        step: 0.00000001
                     },
                     {
                         name: 'Air Gap',
                         short: 'airGap',
                         type: 'number',
+                        step: 0.5
                     },
                     {
                         name: 'Water Depth',
                         short: 'depth',
                         type: 'number',
+                        step: 0.5
+                    },
+                    {
+                        name: "Working Interest - %",
+                        short: "workingInt",
+                        type: "number",
+                        step: 0.01,
+                        min: 0,
+                        max: 100
+                    },
+                    {
+                        name: "PD - $",
+                        short: "pd",
+                        type: "number",
+                        step: 0.01
+                    },
+                    {
+                        name: "ROD - % of PD",
+                        short: "rod",
+                        type: "number",
+                        step: 0.01,
+                        min: 0,
+                        max: 100
+                    },
+                    {
+                        name: "S&L - % of PD",
+                        short: "sl",
+                        type: "number",
+                        step: 0.01,
+                        min: 0,
+                        max: 100
+                    },
+                    {
+                        name: "OEE - $",
+                        short: "oee",
+                        type: "number",
+                        step: 0.01
+                    },
+                    {
+                        name: "LOPI - $",
+                        short: "lopi",
+                        type: "number",
+                        step: 0.01
+                    },
+                    {
+                        name: "Windstorm CSL - $",
+                        short: "windstormCSL",
+                        type: "number",
+                        step: 0.01
+                    },
+                    {
+                        name: "Windstorm Retention - $",
+                        short: "windstormRet",
+                        type: "number",
+                        step: 0.01
                     },
                 ];%>
             <% attributes.forEach(function(attr){ %>
@@ -62,7 +120,10 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><%= attr.name %></span>
                     </div>
-                    <input name="<%= attr.short %>" type="<%= attr.type %>" class="form-control input" placeholder="<%= attr.name %>" aria-label="<%= attr.name %>">
+                    <input name="<%= attr.short %>" type="<%= attr.type %>" 
+                    class="form-control input" placeholder="<%= attr.name %>" 
+                    aria-label="<%= attr.name %>" min="<%= attr.min %>" max="<%= attr.max %>"
+                    step="<%= attr.step %>">
                 </div>
             <% }); %>
             <div class="input-group mb-3">
