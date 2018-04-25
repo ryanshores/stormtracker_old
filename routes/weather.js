@@ -147,7 +147,6 @@ router.post("/current", function(req, res){
                     };
                     forecast.push(forecastObj);
                 });
-                console.log(forecast);
                 res.render( "./weather/current", { forecast: forecast, coords: coords } );
             } else {
               // Do something if the forecast does not exist
