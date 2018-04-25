@@ -3,9 +3,11 @@ var express     = require("express"),
     request     = require("request"),
     bodyParser  = require("body-parser"),
     async       = require("async"),
-    rss         = require("rss-to-json");
+    rss         = require("rss-to-json"),
+    schedule    = require('node-schedule');
     
-var Sites    = require("../models/sites");
+var Sites   = require("../models/sites");
+var Storms  = require('../models/storms');
 
 router.use(bodyParser.urlencoded({extended: true}));
 
@@ -13,8 +15,129 @@ const wunderAPI = 'https://api.wunderground.com/api/5673c7f196ec2e7a';
 let forecastURL = `${wunderAPI}/forecast/q/.json`;
 let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 
-const obj = require("../public/json/storms_test.json");
-const obj2 = require("../public/json/storms_test_empty.json");
+var emailer =  require('../emails/emailer.js');
+
+// schedule.scheduleJob('10 * * * * *', function(){
+//     console.log('Starting Job');
+//     getNewStorms(function(result){
+//         console.log(result);
+//     });
+// });
+
+getNewStorms(function(result){
+        console.log('Result: ' + result);
+    });
+
+function getNewStorms(){
+    let storms = [];
+    async.waterfall([
+        // Get hurricanes
+        function(done){
+            request(stormsURL, function(err, responce, body){
+                if( err ){
+                    done( true, storms );
+                } else {
+                    // parse the request
+                    let json_parsed = JSON.parse(body);
+                    // retrieve the data that I want
+                    json_parsed['currenthurricane'].forEach( function( storm ) {
+                        // This is the object that goes into the array
+                        var stormObj = {
+                            name: storm['stormInfo']['stormName_Nice'],
+                            number: storm['stormInfo']['stormNumber'],
+                            category: storm['Current']['SaffirSimpsonCategory']
+                        };
+                        // Add to array
+                        storms.push(stormObj);
+                    });
+                    done( null, storms );
+                }
+            });
+        },
+        // Label the duplicates
+        function(storms, done){
+            let activeStorms = [];
+            storms.forEach(function( storm ){
+                storm.isDup = false;
+                activeStorms.forEach(function( activeStorm ){
+                    if( activeStorm == storm.name ) {
+                        storm.isDup = true;
+                    }
+                });
+                activeStorms.push( storm.name );
+            });
+            done(null, storms);
+        },
+        // Remove the duplicates
+        function(storms, done) {
+            storms.forEach(function(storm, i){
+               if(storm.isDup){
+                   delete storms[i];
+               }
+            });
+            done(null, storms);
+        },
+        // Check if storm is in db already if not add
+        function(storms, done){
+            storms.forEach(function(storm){
+                // Storms.count({number: storm.number}, function(err, result){
+                //     if( err ) {console.log(err)}
+                //     else {
+                //         if( result == 0 ) {
+                //             Storms.create(storm, function(err, newStorm){
+                //                 if(err){console.log(err);}
+                //                 else { newStorms.push(newStorm) }
+                //             });
+                //         } else {
+                            
+                //         }
+                //     }
+                // });
+                Storms.findOne({number: storm.number}, function( err, doc ){
+                    if( err ){
+                        console.log(err);
+                    }
+                    if( doc == null) {
+                        // The storm does not exist yet   
+                        Storms.create(storm, function(err, newStorm){
+                            if(err){console.log(err);}
+                            else {
+                                // Send the new activity email
+                                console.log("New activity");
+                                emailer.sendNewActivity('ryanshores@us.matdan.com', newStorm.name + " Cat. " + newStorm.category);
+                            }
+                        });
+                    } else {
+                        // The storm exists
+                        // Check is the category has increased
+                        if( doc.category < storm.category ) {
+                            // The category has increased
+                            // Send a category increase email and update
+                            console.log('category increase');
+                            doc.category = storm.category;
+                            doc.save(function(err){
+                                if(err){
+                                    console.log(err);
+                                }
+                            });
+                            emailer.upgradeActivity('ryanshores@us.matdan.com', doc.name + " Cat. " + doc.category);
+                        } else {
+                            // The storm is the same category
+                            // Do nothing
+                            console.log("Nothing has changed");
+                        }
+                    }
+                });
+            });
+            done(null, 'done');
+        }
+        ], 
+    function(err, result){
+        if( err ) { }
+        else { }
+    });
+}
+
 
 // Routes used by the site
 // Loads satellite radar from SSEC
