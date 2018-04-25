@@ -17,7 +17,7 @@ var siteSchema = new mongoose.Schema({
         name: {type: String, default: ''},
         group: {type: String, default: ''},
         type: {type: String, default: ''},
-        airgap: {type: Number, default: 0},
+        airGap: {type: Number, default: 0},
         areaCode: {type: String, default: ''},
 		blockNumber: {type: Number, default: 0},
 		field: {type: String, default: ''},
