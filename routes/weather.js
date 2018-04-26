@@ -3,9 +3,11 @@ var express     = require("express"),
     request     = require("request"),
     bodyParser  = require("body-parser"),
     async       = require("async"),
-    rss         = require("rss-to-json");
+    rss         = require("rss-to-json"),
+    schedule    = require('node-schedule');
     
-var Sites    = require("../models/sites");
+var Sites   = require("../models/sites");
+var Storms  = require('../models/storms');
 
 router.use(bodyParser.urlencoded({extended: true}));
 
@@ -13,8 +15,134 @@ const wunderAPI = 'https://api.wunderground.com/api/5673c7f196ec2e7a';
 let forecastURL = `${wunderAPI}/forecast/q/.json`;
 let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 
-const obj = require("../public/json/storms_test.json");
-const obj2 = require("../public/json/storms_test_empty.json");
+var emailer =  require('../emails/emailer.js');
+
+schedule.scheduleJob('6 * * *', function(){
+    getNewStorms();
+});
+
+schedule.scheduleJob('12 * * *', function(){
+    getNewStorms();
+});
+
+schedule.scheduleJob('18 * * *', function(){
+    getNewStorms();
+});
+
+
+function getByValue(arr, query, value) {
+    var newArr = [];
+    for (var i = 0; i<arr.length; i++) {
+        if(arr[i][query].indexOf(value) > -1){
+            newArr.push(arr[i]);
+        }
+    }
+    return newArr;
+}
+
+function removeDuplicates(arr, key) {
+    if (!(arr instanceof Array) || key && typeof key !== 'string') {
+        return false;
+    }
+
+    if (key && typeof key === 'string') {
+        return arr.filter(function (obj, index, arr) {
+            return arr.map(function (mapObj) {
+                return mapObj[key];
+            }).indexOf(obj[key]) === index;
+        });
+    } else {
+        return arr.filter(function (item, index, arr) {
+            return arr.indexOf(item) == index;
+        });
+    }
+}
+
+function getNewStorms(){
+    console.log("Checking for new storms");
+    let storms = [];
+    async.waterfall([
+        // Get hurricanes
+        function(done){
+            request(stormsURL, function(err, responce, body){
+                if( err ){
+                    done( true );
+                } else {
+                    // parse the request
+                    let json_parsed = JSON.parse(body);
+                    // retrieve the data that I want
+                    json_parsed['currenthurricane'].forEach( function( storm ) {
+                        // This is the object that goes into the array
+                        var stormObj = {
+                            name: storm['stormInfo']['stormName_Nice'],
+                            number: storm['stormInfo']['stormNumber'],
+                            category: storm['Current']['SaffirSimpsonCategory']
+                        };
+                        // Add to array
+                        storms.push(stormObj);
+                    });
+                    done( null, storms );
+                }
+            });
+        },
+        // Remove Duplicates and Sort
+        function(storms, done){
+            var uniqueStorms = removeDuplicates(storms, 'number');
+            var filteredStorms = getByValue(uniqueStorms, 'number', 'at');
+            done(null, filteredStorms);
+        },
+        // Check if storm is in db already if not add
+        function(storms, done){
+            console.log(storms);
+            storms.forEach(function(storm){
+                Storms.findOne({number: storm.number}, function( err, doc ){
+                    if( err ){
+                        console.log(err);
+                    }
+                    if( doc == null) {
+                        // The storm does not exist yet   
+                        Storms.create(storm, function(err, newStorm){
+                            if(err){console.log(err);}
+                            else {
+                                // Send the new activity email
+                                console.log("New activity");
+                                emailer.sendNewActivity(newStorm.name + " Cat. " + newStorm.category);
+                            }
+                        });
+                    } else {
+                        // The storm exists
+                        // Check is the category has increased
+                        if( doc.category < storm.category ) {
+                            // The category has increased
+                            // Send a category increase email and update
+                            console.log('category increase');
+                            doc.category = storm.category;
+                            doc.save(function(err){
+                                if(err){
+                                    console.log(err);
+                                }
+                            });
+                            emailer.upgradedActivity(doc.name + " Cat. " + doc.category);
+                        } else {
+                            // The storm is the same category
+                            // Do nothing
+                            console.log("Nothing has changed");
+                        }
+                    }
+                });
+            });
+            done(null, 'done');
+        }
+        ], 
+    function(err){
+        if( err ){
+            console.log( err );
+        } else {
+            console.log("Finished checking for new storms");
+        }
+    });
+}
+
 
 // Routes used by the site
 // Loads satellite radar from SSEC
