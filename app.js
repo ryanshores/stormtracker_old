@@ -8,6 +8,7 @@ var express         = require('express'),
     flash           = require("connect-flash");
 
 require("dotenv").config({path: './vars.env'});
+require('newrelic');
 
 // requires the model with Passport-Local Mongoose plugged in
 var User    = require("./models/users"),
