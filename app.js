@@ -23,18 +23,6 @@ var indexRoutes     =   require("./routes/index"),
     weatherRoutes   =   require("./routes/weather"),
     newSiteRoutes   =   require("./routes/newsites");
     
-// Email functions
-var emailer =  require('./emails/emailer.js');
-
-var email = {
-    toEmail: [
-        'ryan.shores@me.com',
-        'ryanshores@us.matdan.com'
-        ],
-    toSubject: "Hurricane Bri",
-};
-// emailer.sendNewActivity(email.toEmail, email.toSubject);
-    
 
 // App setup
 // ============================================
