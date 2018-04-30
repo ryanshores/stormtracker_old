@@ -1,3 +1,6 @@
+require("dotenv").config({path: './vars.env'});
+require('newrelic');
+
 var express         = require('express'),
     app             = express(),
     mongoose        = require("mongoose"),
@@ -6,8 +9,6 @@ var express         = require('express'),
     bodyParser      = require("body-parser"),
     methodOverride  = require("method-override"),
     flash           = require("connect-flash");
-
-require("dotenv").config({path: './vars.env'});
 
 // requires the model with Passport-Local Mongoose plugged in
 var User    = require("./models/users"),
@@ -21,18 +22,6 @@ var indexRoutes     =   require("./routes/index"),
     userRoutes      =   require("./routes/users"),
     weatherRoutes   =   require("./routes/weather"),
     newSiteRoutes   =   require("./routes/newsites");
-    
-// Email functions
-var emailer =  require('./emails/emailer.js');
-
-var email = {
-    toEmail: [
-        'ryan.shores@me.com',
-        'ryanshores@us.matdan.com'
-        ],
-    toSubject: "Hurricane Bri",
-};
-// emailer.sendNewActivity(email.toEmail, email.toSubject);
     
 
 // App setup

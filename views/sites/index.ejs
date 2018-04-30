@@ -52,10 +52,22 @@
                     <div class="card mb-2 mb-md-5 mx-0 mx-md-3">
                         <h5 class="card-header"><%= site.properties.type %>: <%= site.properties.areaCode%> <%=site.properties.blockNumber%> <%= site.properties.name %></h5>
                         <div class="card-body">
-                            <p class="card-text mb-0">Field: <%= site.properties['field'] %></p>
-                            <p class="card-text mb-0">Coordinates:</p>
-                            <p class="card-text mb-0"><%= site.geometry.coordinates[1] %>, <%= site.geometry.coordinates[0] %></p>
-                            <p class="card-text">Air Gap: <%= site.properties.airgap %></p>
+                            <p class="card-text">Working Interest: <%= site.properties.workingInt %></p>
+                            <p class="card-text">PD: $<%= site.properties.pd %></p>
+                            <p class="card-text">ROD: $<%= site.properties.rod * site.properties.pd * 0.01 %></p>
+                            <p class="card-text">S&L: $<%= site.properties.sl * site.properties.pd * 0.01 %></p>
+                            <p class="card-text">OEE: $<%= site.properties.oee %></p>
+                            <p class="card-text">LOPI: $<%= site.properties.lopi %></p>
+                            <p class="card-text">Windstorm CSL: $<%= site.properties.windstormCSL %></p>
+                            <p class="card-text">Windstorm Retention: $<%= site.properties.windstormRet %></p>
+                        </div>
+                        <hr>
+                        <div class="card-body">
+                            <p class="card-text">Field: <%= site.properties['field'] %></p>
+                            <p class="card-text">Coordinates:</p>
+                            <p class="card-text"><%= site.geometry.coordinates[1] %>, <%= site.geometry.coordinates[0] %></p>
+                            <p class="card-text">Water Depth: <%= site.properties.waterDepth %> ft</p>
+                            <p class="card-text">Air gap: <%= site.properties.airGap %> ft</p>
                         </div>
                         <% if( currentUser.isAdmin == true ) {%>
                             <div class="card-body pt-0">
@@ -75,12 +87,24 @@
                     <% sites.forEach(function(site) {%>
                         <% if ( site.properties.type == obj ) {%>
                             <div class="card mb-2 mb-md-5 mx-0 mx-md-3">
-                                <h5 class="card-header"><%= site.properties.type %>: <%= site.properties.name %></h5>
+                                <h5 class="card-header"><%= site.properties.type %>: <%= site.properties.areaCode%> <%=site.properties.blockNumber%> <%= site.properties.name %></h5>
                                 <div class="card-body">
-                                    <p class="card-text mb-0">Field: <%= site.properties['field'] %></p>
-                                    <p class="card-text mb-0">Coordinates:</p>
-                                    <p class="card-text mb-0"><%= site.geometry.coordinates[1] %>, <%= site.geometry.coordinates[0] %></p>
-                                    <p class="card-text">Air gap: <%= site.properties.airgap %></p>
+                                    <p class="card-text">Working Interest: <%= site.properties.workingInt %></p>
+                                    <p class="card-text">PD: $<%= site.properties.pd %></p>
+                                    <p class="card-text">ROD: $<%= site.properties.rod * site.properties.pd * 0.01 %></p>
+                                    <p class="card-text">S&L: $<%= site.properties.sl * site.properties.pd * 0.01 %></p>
+                                    <p class="card-text">OEE: $<%= site.properties.oee %></p>
+                                    <p class="card-text">LOPI: $<%= site.properties.lopi %></p>
+                                    <p class="card-text">Windstorm CSL: $<%= site.properties.windstormCSL %></p>
+                                    <p class="card-text">Windstorm Retention: $<%= site.properties.windstormRet %></p>
+                                </div>
+                                <hr>
+                                <div class="card-body">
+                                    <p class="card-text">Field: <%= site.properties['field'] %></p>
+                                    <p class="card-text">Coordinates:</p>
+                                    <p class="card-text"><%= site.geometry.coordinates[1] %>, <%= site.geometry.coordinates[0] %></p>
+                                    <p class="card-text">Water Depth: <%= site.properties.waterDepth %> ft</p>
+                                    <p class="card-text">Air gap: <%= site.properties.airGap %> ft</p>
                                 </div>
                                 <% if( currentUser.isAdmin == true ) {%>
                                     <div class="card-body pt-0">

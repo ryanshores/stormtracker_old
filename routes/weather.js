@@ -17,25 +17,56 @@ let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 
 var emailer =  require('../emails/emailer.js');
 
-// schedule.scheduleJob('10 * * * * *', function(){
-//     console.log('Starting Job');
-//     getNewStorms(function(result){
-//         console.log(result);
-//     });
+// schedule.scheduleJob('6 * * *', function(){
+//     getNewStorms();
 // });
 
-getNewStorms(function(result){
-        console.log('Result: ' + result);
-    });
+// schedule.scheduleJob('12 * * *', function(){
+//     getNewStorms();
+// });
+
+// schedule.scheduleJob('18 * * *', function(){
+//     getNewStorms();
+// });
+
+
+function getByValue(arr, query, value) {
+    var newArr = [];
+    for (var i = 0; i<arr.length; i++) {
+        if(arr[i][query].indexOf(value) > -1){
+            newArr.push(arr[i]);
+        }
+    }
+    return newArr;
+}
+
+function removeDuplicates(arr, key) {
+    if (!(arr instanceof Array) || key && typeof key !== 'string') {
+        return false;
+    }
+
+    if (key && typeof key === 'string') {
+        return arr.filter(function (obj, index, arr) {
+            return arr.map(function (mapObj) {
+                return mapObj[key];
+            }).indexOf(obj[key]) === index;
+        });
+    } else {
+        return arr.filter(function (item, index, arr) {
+            return arr.indexOf(item) == index;
+        });
+    }
+}
 
 function getNewStorms(){
+    console.log("Checking for new storms");
     let storms = [];
     async.waterfall([
         // Get hurricanes
         function(done){
             request(stormsURL, function(err, responce, body){
                 if( err ){
-                    done( true, storms );
+                    done( true );
                 } else {
                     // parse the request
                     let json_parsed = JSON.parse(body);
@@ -54,45 +85,16 @@ function getNewStorms(){
                 }
             });
         },
-        // Label the duplicates
+        // Remove Duplicates and Sort
         function(storms, done){
-            let activeStorms = [];
-            storms.forEach(function( storm ){
-                storm.isDup = false;
-                activeStorms.forEach(function( activeStorm ){
-                    if( activeStorm == storm.name ) {
-                        storm.isDup = true;
-                    }
-                });
-                activeStorms.push( storm.name );
-            });
-            done(null, storms);
-        },
-        // Remove the duplicates
-        function(storms, done) {
-            storms.forEach(function(storm, i){
-               if(storm.isDup){
-                   delete storms[i];
-               }
-            });
-            done(null, storms);
+            var uniqueStorms = removeDuplicates(storms, 'number');
+            var filteredStorms = getByValue(uniqueStorms, 'number', 'at');
+            done(null, filteredStorms);
         },
         // Check if storm is in db already if not add
         function(storms, done){
+            console.log(storms);
             storms.forEach(function(storm){
-                // Storms.count({number: storm.number}, function(err, result){
-                //     if( err ) {console.log(err)}
-                //     else {
-                //         if( result == 0 ) {
-                //             Storms.create(storm, function(err, newStorm){
-                //                 if(err){console.log(err);}
-                //                 else { newStorms.push(newStorm) }
-                //             });
-                //         } else {
-                            
-                //         }
-                //     }
-                // });
                 Storms.findOne({number: storm.number}, function( err, doc ){
                     if( err ){
                         console.log(err);
@@ -104,7 +106,7 @@ function getNewStorms(){
                             else {
                                 // Send the new activity email
                                 console.log("New activity");
-                                emailer.sendNewActivity('ryanshores@us.matdan.com', newStorm.name + " Cat. " + newStorm.category);
+                                emailer.sendNewActivity(newStorm.name + " Cat. " + newStorm.category);
                             }
                         });
                     } else {
@@ -120,7 +122,7 @@ function getNewStorms(){
                                     console.log(err);
                                 }
                             });
-                            emailer.upgradeActivity('ryanshores@us.matdan.com', doc.name + " Cat. " + doc.category);
+                            emailer.upgradedActivity(doc.name + " Cat. " + doc.category);
                         } else {
                             // The storm is the same category
                             // Do nothing
@@ -132,9 +134,12 @@ function getNewStorms(){
             done(null, 'done');
         }
         ], 
-    function(err, result){
-        if( err ) { }
-        else { }
+    function(err){
+        if( err ){
+            console.log( err );
+        } else {
+            console.log("Finished checking for new storms");
+        }
     });
 }
 

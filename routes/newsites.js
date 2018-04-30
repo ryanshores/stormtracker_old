@@ -46,34 +46,36 @@ router.post("/edit", function(req, res){
 
 
 router.post("/add", middleware.isLoggedIn, middleware.isAdmin, function(req, res){
-    var selected = req.body.array;
+    // var selected = req.body.array;
    
-    var assetArr = [];
-    selected.forEach(function(asset){
-        var newSite = new Sites({
-            geometry: {coordinates: [ asset['Longitude'], asset['Latitude'] ]},
-            properties: {
-                name: asset['Structure Name'],
-                group: req.user.group,
-                airgap: asset['Air Gap'],
-                type: asset['type'],
-                'areaCode': asset['Area Code'],
-                'blockNumber': asset['Block Number'],
-                'field': asset['Field'],
-                'waterDepth': asset['Water Depth']
-            }
-        });
-        assetArr.push(newSite);
-    });
+    // var assetArr = [];
+    // selected.forEach(function(asset){
+    //     var newSite = new Sites({
+    //         geometry: {coordinates: [ asset['Longitude'], asset['Latitude'] ]},
+    //         properties: {
+    //             name: asset['Structure Name'],
+    //             group: req.user.group,
+    //             airgap: asset['Air Gap'],
+    //             type: asset['type'],
+    //             'areaCode': asset['Area Code'],
+    //             'blockNumber': asset['Block Number'],
+    //             'field': asset['Field'],
+    //             'waterDepth': asset['Water Depth']
+    //         }
+    //     });
+    //     assetArr.push(newSite);
+    // });
+    
+    var asset = req.body.asset;
+    asset.properties.group = req.user.group;
    
-    Sites.insertMany(assetArr, function(err, docs){
+    Sites.create(asset, function(err, docs){
         if( err ) { console.log( err )}
         else {
             console.log( docs );
-            req.flash("success", "Sucessfully added to database");
-            res.redirect("/sites");
+            res.status(201).send('Success');
         }
-     });
+    });
 });
 
 module.exports = router;

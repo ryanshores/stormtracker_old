@@ -1,3 +1,5 @@
 sendgrid.env
 vars.env
 vars.env
+newrelic_agent.log
+newrelic_agent.log
