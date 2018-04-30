@@ -1,3 +1,6 @@
+require("dotenv").config({path: './vars.env'});
+require('newrelic');
+
 var express         = require('express'),
     app             = express(),
     mongoose        = require("mongoose"),
@@ -6,9 +9,6 @@ var express         = require('express'),
     bodyParser      = require("body-parser"),
     methodOverride  = require("method-override"),
     flash           = require("connect-flash");
-
-require("dotenv").config({path: './vars.env'});
-require('newrelic');
 
 // requires the model with Passport-Local Mongoose plugged in
 var User    = require("./models/users"),
