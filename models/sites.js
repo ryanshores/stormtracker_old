@@ -19,7 +19,7 @@ var siteSchema = new mongoose.Schema({
         type: {type: String, default: ''},
         airGap: {type: Number, default: 0},
         areaCode: {type: String, default: ''},
-		blockNumber: {type: Number, default: 0},
+		blockNumber: {type: String, default: 0},
 		field: {type: String, default: ''},
 		waterDepth: {type: Number, default: 0},
 		workingInt: {type: Number, default: 0},

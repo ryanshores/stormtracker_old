@@ -10,12 +10,12 @@
     
     <div class="mt-3">
         <% objects.forEach(function(obj){ %>
-            <div class="group mb-5 p-3">
+            <div class="group mb-5 p-3" onsubmit="return submitdata(this);">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">Type</span>
                     </div>
-                    <select required class="input custom-select" name="type" form="siteForm2" id="inputTypeOfSite">
+                    <select required class="input custom-select type" name="type" form="siteForm2" id="inputTypeOfSite">
                         <option value="" selected>Select the type of site</option>
                         <option value="Platform">Platform</option>
                         <option value="MODU">MODU</option>
@@ -30,7 +30,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">Area Code</span>
                     </div>
-                    <select class="custom-select input" name="Area Code" form="siteForm">
+                    <select class="custom-select input areaCode" name="Area Code" form="siteForm">
                         <% areas.forEach(function(area, i){ %>
                             <% var selected = ( obj['Area Code'] == area ) ? "selected" : ""; %>
                             <option value="<%= area %>" <%= selected %>><%= area %></option>
@@ -142,7 +142,7 @@
                                 <span class="input-group-text"><%= attr.pre %></span>
                             </div>
                         <% } %>
-                        <input name="<%= attr.short %>" type="<%= attr.type %>" class="form-control input" 
+                        <input name="<%= attr.short %>" type="<%= attr.type %>" class="form-control input <%= attr.short %>" 
                         value="<%= obj[ attr.name ] %>" aria-label="<%= attr.name %>"
                         min="<%= attr.min %>" max="<%= attr.max %>" step="<%= attr.step %>">
                         <% if( attr.post ){ %>
@@ -152,11 +152,12 @@
                         <% } %>
                     </div>
                 <% }); %>
-                <button class="btn btn-danger float-right removeBtn">Remove</button>
+                <button class="btn btn-danger float-right removeBtn">Discard</button>
+                <button class="btn btn-success float-right addBtn mr-3">Add Asset</button>
             </div>
         <% }); %>
     </div>
-    <button class="btn btn-primary mb-5" id="addSites">Add Sites</button>
+    <button class="btn btn-primary mb-5">Add Sites</button>
     
 </div>
 
