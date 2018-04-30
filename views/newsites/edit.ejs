@@ -30,7 +30,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">Area Code</span>
                     </div>
-                    <select class="custom-select input" name="Area Code" form="siteForm">
+                    <select class="custom-select input areaCode" name="Area Code" form="siteForm">
                         <% areas.forEach(function(area, i){ %>
                             <% var selected = ( obj['Area Code'] == area ) ? "selected" : ""; %>
                             <option value="<%= area %>" <%= selected %>><%= area %></option>
