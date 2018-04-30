@@ -1,11 +1,5 @@
 /* globals $ */
 
-// $('#addSites').on('click', function() {
-//    var array = makeArray();
-//    $.post('/newsites/add', {array: array});
-//    window.location.href = '/home';
-// });
-
 $('.removeBtn').on('click', function(){
    $(this).parent().remove();
 });
