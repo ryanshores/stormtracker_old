@@ -17,17 +17,17 @@ let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 
 var emailer =  require('../emails/emailer.js');
 
-schedule.scheduleJob('6 * * *', function(){
-    getNewStorms();
-});
+// schedule.scheduleJob('6 * * *', function(){
+//     getNewStorms();
+// });
 
-schedule.scheduleJob('12 * * *', function(){
-    getNewStorms();
-});
+// schedule.scheduleJob('12 * * *', function(){
+//     getNewStorms();
+// });
 
-schedule.scheduleJob('18 * * *', function(){
-    getNewStorms();
-});
+// schedule.scheduleJob('18 * * *', function(){
+//     getNewStorms();
+// });
 
 
 function getByValue(arr, query, value) {
