@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var newSiteSchema = new mongoose.Schema({
 
     "Area Code": String,
-    "Block Number": Number,
+    "Block Number": String,
     "Field": String,
     "Structure Name": String,
     "Structure Number": Number,

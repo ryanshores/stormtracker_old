@@ -15,6 +15,10 @@ body {
     font-size: 1.1rem;
 }
 
+#legend div {
+    font-size: 0.9rem;
+}
+
 .rounded {
     border-radius: 5px;
 }

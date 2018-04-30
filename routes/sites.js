@@ -15,7 +15,7 @@ const stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 // PreNew
 router.get("/select", function(req, res) {
     res.render("./sites/prenew");
-})
+});
 
 // GET - /sites/new
 router.get("/new", middleware.isLoggedIn, middleware.isAdmin, function(req, res){
@@ -29,10 +29,19 @@ router.post("/new", middleware.isLoggedIn, middleware.isAdmin, function(req, res
             name: req.body.name,
             type: req.body.type,
             group: req.user.group,
-            airgap: req.body.airGap,
-            'areaCode': req.body.areaCode,
-            'blockNumber': req.body.blockNumber,
-            'field': req.body.field
+            airGap: req.body.airGap,
+            areaCode: req.body.areaCode,
+            blockNumber: req.body.blockNumber,
+            field: req.body.field,
+            waterDepth: req.body.waterDepth,
+    		workingInt: req.body.workingInt,
+    		pd: req.body.pd,
+    		rod: req.body.rod,
+    		sl: req.body.sl,
+    		oee: req.body.oee,
+    		lopi: req.body.lopi,
+    		windstormCSL: req.body.windstormCSL,
+    		windstormRet: req.body.windstormRet
         }
     });
     Sites.create(newSite, function(err, newSite){
@@ -97,10 +106,19 @@ router.put("/:id", middleware.isLoggedIn, middleware.isAdmin, function(req, res)
             name: req.body.name,
             type: req.body.type,
             group: req.user.group,
-            airgap: req.body.airGap,
-            'areaCode': req.body.areaCode,
-            'blockNumber': req.body.blockNumber,
-            'field': req.body.field
+            airGap: req.body.airGap,
+            areaCode: req.body.areaCode,
+            blockNumber: req.body.blockNumber,
+            field: req.body.field,
+            waterDepth: req.body.waterDepth,
+    		workingInt: req.body.workingInt,
+    		pd: req.body.pd,
+    		rod: req.body.rod,
+    		sl: req.body.sl,
+    		oee: req.body.oee,
+    		lopi: req.body.lopi,
+    		windstormCSL: req.body.windstormCSL,
+    		windstormRet: req.body.windstormRet
         }
     };
     

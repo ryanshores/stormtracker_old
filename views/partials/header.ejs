@@ -2,15 +2,23 @@
 <html lang="en">
 <head>
 	<title>StormTracker</title>
-	
+
 	<!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="no">
+	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	
 	<!-- Andriod Manifest -->
 	<link rel="manifest" href="/manifest.json">
+	
+	<!--Add to homescreen-->
+	<link rel="stylesheet" type="text/css" href="/stylesheets/addtohomescreen.css">
+	<script src="/scripts/addtohomescreen.js"></script>
+	<script>
+	addToHomescreen({});
+	</script>
 
 	<!-- Bootstrap CSS CDN -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
