@@ -7,13 +7,14 @@
 <% include ../partials/nav %>
 
 <div class="container">
-    <div id="map" class="map rounded mb-3"></div>
     <% if( currentUser.isAdmin ) { %>
                 <a class="btn btn-outline-dark d-block d-sm-inline p-2" href="/sites/select">Add New Asset</a>
             <% } else { %>
                 <a class="btn btn-outline-dark d-inline p-2 disabledLink" data-toggle="tooltip" data-placement="left" title="Contact your admin to add a new site">
                     <span class="nav-link" href="/sites/select" data-toggle="tooltip" data-placement="left" title="Contact your admin to add a new site">Add New Asset</span>
             <% } %>
+    <div id="map" class="map rounded mb-5" style="top: 15px;"></div>
+    
     <form class="form-inline pb-2 mt-3" action="/sites/filter" method="POST">
         
         <select required class="form-control mr-0 mr-sm-2" name="filter" aria-label="areaCode Filter" onchange="this.form.submit()">

@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/tables.css">
 <% include ../partials/nav %>
 <div class="container">
+    <a href="/sites" class="btn h3" style="background: var(--matdan-blue);">Go Back</a>
     <form class="form-inline" action="/newsites/search" method="POST">
         <select required class="form-control mr-2" name="areaCode" aria-label="Area Code Filter" onchange="this.form.submit()">
             <% var areas = ['AC', 'BA', 'BM', 'BS', 'CA', 'EB', 'EC', 'EI', 'EW', 
