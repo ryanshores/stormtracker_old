@@ -18,10 +18,11 @@ let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 var emailer =  require('../emails/emailer.js');
 
 var rule = new schedule.RecurrenceRule();
-rule.minute = 37;
+rule.hour = 6;
 
 schedule.scheduleJob(rule, function(){
   console.log('The answer to life, the universe, and everything!');
+  emailer.sendtoryan();
 });
 
 // schedule.scheduleJob('6 * * *', function(){

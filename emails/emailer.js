@@ -9,6 +9,17 @@ let emails = [];
 
 var emailerObj = {
   
+  sendtoryan: function sendtoryan(){
+    const msg = {
+      to: 'ryan.shores@me.com',
+      from: 'test@example.com',
+      subject: 'Sending every 6 hours',
+      text: 'and easy to do anywhere, even with Node.js',
+      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    };
+    sgMail.send(msg);
+  },
+  
   sendTestEmail: function sendTestEmail(){
     async.waterfall([
       // Get list of users email and name
