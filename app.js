@@ -64,7 +64,7 @@ app.use(function (req, res, next) {
     res.locals.success = req.flash("success");
     res.locals.currentUser = req.user;
     res.locals.path = req.path;
-    res.locals.wunderURL = "https://api.wunderground.com/api/5673c7f196ec2e7a/";
+    res.locals.wunderURL = "https://api.wunderground.com/api/" + process.env.WUNDERKEY + "/";
     next();
 });
 

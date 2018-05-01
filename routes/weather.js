@@ -11,7 +11,7 @@ var Storms  = require('../models/storms');
 
 router.use(bodyParser.urlencoded({extended: true}));
 
-const wunderAPI = 'https://api.wunderground.com/api/5673c7f196ec2e7a';
+const wunderAPI = 'https://api.wunderground.com/api/' + process.env.WUNDERKEY;
 let forecastURL = `${wunderAPI}/forecast/q/.json`;
 let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 

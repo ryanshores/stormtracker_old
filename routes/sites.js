@@ -6,7 +6,7 @@ var express     = require("express"),
     
 var Sites    = require("../models/sites");
 
-const wunderAPI = 'https://api.wunderground.com/api/5673c7f196ec2e7a';
+const wunderAPI = 'https://api.wunderground.com/api/' + process.env.WUNDERKEY;
 const stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 
 //============================================================================//

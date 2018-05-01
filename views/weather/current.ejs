@@ -23,7 +23,7 @@
               width="100%"
               height="100%"
               frameborder="0" style="border:0"
-              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCCX5a3FYM8k6yeA_Bw_FSDmmgum21BBmY
+              src="https://www.google.com/maps/embed/v1/place?key=<%=process.env.GOOGLEEMBEDKEY%>
               &zoom=10
               &q=<%= coords %>">
             </iframe>
@@ -52,7 +52,7 @@
     
 <script src="/scripts/location.js"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcjkKAD8wUDIsg4FDC0t8_FGVgCoD-MrA&libraries=places&callback=initSearch"
+<script src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.GOOGLEJSKEY%>&libraries=places&callback=initSearch"
         async defer></script>
         
 
