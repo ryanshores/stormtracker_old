@@ -1,13 +1,14 @@
 <% include ../partials/header %>
+<link href="/stylesheets/outlook.css" rel="stylesheet"></link>
 <% include ../partials/nav %>
 
 <div class="container">
-    <ul class="nav nav-pills mb-2" role="tablist">
+    <ul class="nav nav-pills mb-3" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">North Atlantic Ocean</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Seasonal Forecasts</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Seasonal Forecast</a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -15,7 +16,31 @@
             <img class="img-fluid d-block mx-auto mb-5 rounded" src="https://www.nhc.noaa.gov/xgtwo/two_atl_5d0.png"></img>
         </div>
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <h1>Seasonal Forecasts Soon</h1>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Named Storm</th>
+                        <th scope="col">Hurricane</th>
+                        <th scope="col">Major Hurricane</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Average Season</th>
+                        <td>12</td>
+                        <td>6</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2018 Expectation</th>
+                        <td>18</td>
+                        <td>9</td>
+                        <td>5</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>*** 2018 landfall expection is 4 hurricanes and 2 to 3 major hurricanes. </p>
         </div>
     </div>
 </div>

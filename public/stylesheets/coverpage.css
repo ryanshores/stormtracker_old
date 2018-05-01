@@ -61,10 +61,10 @@ body {
 }
 
 .slideshow li:nth-child(1) { 
-  background-image: url(../coverpage/image1.jpg);
+  background-image: url(../coverpage/image2.jpg);
 }
 .slideshow li:nth-child(2) { 
-  background-image: url(../coverpage/image2.jpg);
+  background-image: url(../coverpage/image1.jpg);
   animation-delay: 10s; 
 }
 .slideshow li:nth-child(3) { 

@@ -18,7 +18,7 @@
 
 <div class="container p-sm-0">
   <!-- Nav tabs -->
-  <ul class="nav nav-pills mb-2" id="myTab" role="tablist">
+  <ul class="nav nav-pills mb-3" id="myTab" role="tablist">
     <li class="nav-item">
       <a class="nav-link active" id="storms-tab" data-toggle="tab" href="#storms" role="tab" aria-controls="Storms" aria-selected="true">Current Storms</a>
     </li>
@@ -38,7 +38,10 @@
                 <div class="card mb-3 stormCard mx-auto mx-md-3 mx-xl-auto">
                   <div class="card-header">
                     <h5 class="d-inline"><%= storm.name %></h5>
+                    <% if( storm.category < 1){ %>
+                    <% } else { %>
                     <h5 class="text-right d-inline">(CAT <%= storm.category %>)</h5>
+                    <% } %>
                   </div>
                   <div class="card-body">
                     <div class="row no-gutters mb-3">
@@ -117,10 +120,11 @@
             <div class="col text-center shadow" style="background: #E5521C">CAT 4</div>
             <div class="col text-center shadow" style="background: #7F0B99">CAT 5</div>
           </div>
-          <p class="credited mt-3 text-center muted">Data provided by 
+          <p class="credited mt-3 mb-1 text-center muted">Data provided by 
           <a class="muted" href="https://www.wunderground.com/?apiref=906c96c4bb4ea25d">Wunderground</a>
           and the 
-          <a class="muted" href="https://www.nhc.noaa.gov/">NHC</a></p>      
+          <a class="muted" href="https://www.nhc.noaa.gov/">NHC</a></p>
+          <p class=" mt-1 credited text-center muted"><a class="muted" href="#">Legend</a></p>
         </div>
     </div>
     </div>

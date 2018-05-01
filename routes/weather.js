@@ -222,8 +222,10 @@ router.get("/activity", function(req, res){
                             'pressure': storm['Current']['Pressure']['Inches'],
                             'Forecast': forecasts
                         };
-                        // Add to array
-                        storms.push(stormObj);
+                        // Add to array if cat 0 and above
+                        if( stormObj.category >= 0 ) {
+                            storms.push(stormObj);
+                        }
                     });
                     result = {
                         type: 'success',

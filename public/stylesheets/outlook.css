@@ -1,0 +1,12 @@
+.table {
+	background-color: white;
+	color: black;
+}
+
+td {
+	text-align: center;
+}
+
+.table .thead-dark th {
+    background-color: #5897c7;
+}
