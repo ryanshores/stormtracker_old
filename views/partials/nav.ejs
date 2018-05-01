@@ -21,6 +21,7 @@
                 <a class="dropdown-item" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
                 <a class="dropdown-item" href="/register"><i class="fas fa-user-plus"></i> Register</a>
               <% } else { %>
+                <a class="dropdown-item" href="/sites"><img id="platformIcon" src="/icons/platform.png"> Assets</a>
                 <a class="dropdown-item" href="/users/<%= currentUser._id %>"><i class="fas fa-cog"></i> User Settings</a>
                 <% if(currentUser.isAdmin == true){ %>
                   <a class="dropdown-item" href="/users"><i class="fas fa-users"></i> Manage Users</a>
