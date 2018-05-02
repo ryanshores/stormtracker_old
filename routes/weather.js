@@ -72,8 +72,11 @@ function getNewStorms(){
                             number: storm['stormInfo']['stormNumber'],
                             category: storm['Current']['SaffirSimpsonCategory']
                         };
-                        // Add to array
-                        storms.push(stormObj);
+                        // Add to array if the storm is cat 0 and above
+                        if( stormObj.category >= 0 ) {
+                            storms.push(stormObj);
+                        }
+                        
                     });
                     done( null, storms );
                 }
