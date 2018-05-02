@@ -65,7 +65,7 @@ router.post("/register", function(req, res) {
             done(null, mailOptions);
         },
         // register new user
-        function(transport, mailOptions, done){
+        function(mailOptions, done){
             var newUser = new User({email: req.body.email, name: req.body.name, group: req.body.group});
             User.register(newUser, req.body.password, function(err, user){
                 if( err ){
@@ -168,7 +168,7 @@ router.post('/forgot', function(req, res) {
         function(token, foundUser, done) {
             var mailOptions = {
                 to: foundUser.email,
-                from: 'StormTracker',
+                from: 'noreply@matdan.com',
                 subject: 'Password Reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                   'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
@@ -269,7 +269,7 @@ router.post('/reset/:token', function(req, res, next) {
         function(foundUser, done) {
             var mailOptions = {
                 to: foundUser.email,
-                from: 'passwordreset',
+                from: 'noreply@matdan.com',
                 subject: 'Your password has been changed',
                 text: 'Hello,\n\n' +
                   'This is a confirmation that the password for your account ' + foundUser.email + ' has just been changed.\n'

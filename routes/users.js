@@ -418,10 +418,10 @@ router.post("/:id/group", middleware.isLoggedIn, function(req, res){
                         done( true, result );
                     } else {
                         var mailOptions = {
-                            from: 'StormTracker', // sender address
-                            to: adminEmails, // list of receivers
-                            subject: 'New User: ' + updatedUser.name, // Subject line
-                            text: 'Name: ' + updatedUser.name + ", email: " + updatedUser.email + ', group: ' + updatedUser.group // plain text body
+                            from: 'noreply@matdan.com',
+                            to: adminEmails,
+                            subject: 'Updated User: ' + updatedUser.name,
+                            text: 'Name: ' + updatedUser.name + ", email: " + updatedUser.email + ', group: ' + updatedUser.group
                         }; 
                         sgMail.send(mailOptions, (err, message) => {
                             if(err){
@@ -431,6 +431,7 @@ router.post("/:id/group", middleware.isLoggedIn, function(req, res){
                                     dest: '/home'
                                 };
                                 console.log("There was an error sending the admin notification email: " + err.message);
+                                console.log(err.response.body);
                                 done( null, result, 'done');
                             } else {
                                 result = {

@@ -37,6 +37,7 @@ router.post('/contact', function(req, res){
     
     mailOptions = {
         replyTo: req.body.email,
+        from: "noreply@matdan.com",
         to: 'ryanshores@us.matdan.com', // list of receivers
         subject: 'Message from: ' + req.body.name, // Subject line
         text: req.body.inputText, // plain text body
@@ -45,7 +46,8 @@ router.post('/contact', function(req, res){
     
     sgMail.send(mailOptions, (err, message) => {
         if(err){
-            console.log(err);
+            console.log("Error sending contact us email");
+            console.log(err.response.body);
             req.flash("error", err);
             res.redirect("/contact");
         } else {
