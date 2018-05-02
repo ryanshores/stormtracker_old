@@ -8,14 +8,8 @@ let express             = require("express"),
     
 let Users    = require("../models/users");
 
-let transport = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'matdantester@gmail.com',
-        pass: 'stormtracker'
-    }
-});
-
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 router.use(bodyParser.urlencoded({extended: true}));
 
@@ -386,7 +380,7 @@ router.post("/:id/name", middleware.isLoggedIn, function(req, res){
 router.post("/:id/group", middleware.isLoggedIn, function(req, res){
     
     // Setup default admin email
-    let adminEmails = ["matdantester@gmail.com"];
+    let adminEmails = ["ryanshores@us.matdan.com"];
     let result = {};
     
     // Stop users from changing each others info
@@ -429,15 +423,15 @@ router.post("/:id/group", middleware.isLoggedIn, function(req, res){
                             subject: 'New User: ' + updatedUser.name, // Subject line
                             text: 'Name: ' + updatedUser.name + ", email: " + updatedUser.email + ', group: ' + updatedUser.group // plain text body
                         }; 
-                        transport.sendMail(mailOptions, function(err, info){
+                        sgMail.send(mailOptions, (err, message) => {
                             if(err){
                                 result = {
                                     type: 'warning',
                                     value: 'There was an error notifying the admin of your request to join the company account. Please notify them to gain access.',
                                     dest: '/home'
                                 };
-                                done( null, result, 'done');
                                 console.log("There was an error sending the admin notification email: " + err.message);
+                                done( null, result, 'done');
                             } else {
                                 result = {
                                     type: 'success',
@@ -446,7 +440,7 @@ router.post("/:id/group", middleware.isLoggedIn, function(req, res){
                                 };
                                 done( null, result, 'done');
                             }
-                        });  
+                        });
                     }
                 });          
             }
