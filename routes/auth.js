@@ -8,6 +8,9 @@ var express             = require("express"),
 
 var User    = require("../models/users");
 
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 router.use(bodyParser.urlencoded({extended: true}));
 
 
@@ -53,20 +56,13 @@ router.post("/register", function(req, res) {
         },
         // setup mailer
         function(adminEmails, done){
-            var transport = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'matdantester@gmail.com',
-                    pass: 'stormtracker'
-                }
-            });
             var mailOptions = {
-                from: '"Automated Message"', // sender address
+                from: 'noreply@matdan.com', // sender address
                 to: adminEmails, // list of receivers
                 subject: 'New User: ' + req.body.name, // Subject line
                 text: 'Name: ' + req.body.name + ", email: " + req.body.email + ', Company: ' + req.body.group // plain text body
             }; 
-            done(null, transport, mailOptions);
+            done(null, mailOptions);
         },
         // register new user
         function(transport, mailOptions, done){
@@ -81,13 +77,7 @@ router.post("/register", function(req, res) {
                     };
                     done(true, result);
                 } else {
-                    transport.sendMail(mailOptions, function(err, info){
-                        if(err){
-                            console.log("There was an error sending the email: " + err);
-                        } else {
-                            console.log("The new user email was sent");
-                        }
-                    });
+                    sgMail.send(mailOptions);
                     var result = {
                         type: 'success',
                         value: 'Registration successful. Please Login.',
@@ -176,13 +166,6 @@ router.post('/forgot', function(req, res) {
             });
         },
         function(token, foundUser, done) {
-            var transport = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'matdantester@gmail.com',
-                    pass: 'stormtracker'
-                }
-            });
             var mailOptions = {
                 to: foundUser.email,
                 from: 'StormTracker',
@@ -192,11 +175,11 @@ router.post('/forgot', function(req, res) {
                   'http://' + req.headers.host + '/reset/' + token + '\n\n' +
                   'If you did not request this, please ignore this email and your password will remain unchanged.\n'
             };
-            transport.sendMail(mailOptions, function(err) {
-                if( err ) {
+            sgMail.send(mailOptions, (error, message) => {
+                if(error){
                     var result = {
                         type: 'error',
-                        value: err.message,
+                        value: error.message,
                         destination: '/home'
                     };
                     done(true, result);
@@ -206,7 +189,7 @@ router.post('/forgot', function(req, res) {
                             value: 'An e-mail has been sent to ' + foundUser.email + ' with further instructions.',
                             destination: '/home'
                         };
-                    done(null, result, 'done');    
+                    done(null, result, 'done'); 
                 }
             });
         }
@@ -284,13 +267,6 @@ router.post('/reset/:token', function(req, res, next) {
             });
         },
         function(foundUser, done) {
-            var transport = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'matdantester@gmail.com',
-                    pass: 'stormtracker'
-                }
-            });
             var mailOptions = {
                 to: foundUser.email,
                 from: 'passwordreset',
@@ -298,8 +274,8 @@ router.post('/reset/:token', function(req, res, next) {
                 text: 'Hello,\n\n' +
                   'This is a confirmation that the password for your account ' + foundUser.email + ' has just been changed.\n'
             };
-            transport.sendMail(mailOptions, function(err) {
-                if( err ) {
+            sgMail.send(mailOptions, (err, message) => {
+                if (err){
                     // If we are here then the users password was updated but the email failed to send
                     result = {
                         type: 'warning',
