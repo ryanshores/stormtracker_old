@@ -151,7 +151,8 @@
                     </div>
                     <input name="<%= attr.short %>" type="<%= attr.type %>" 
                         class="form-control input" value="<%= attr.value %>" 
-                        aria-label="<%= attr.name %>" step=<%= attr.step %>>
+                        aria-label="<%= attr.name %>" step="<%= attr.step %>" 
+                        min="<%= attr.min %>" max="<%= attr.max %>">
                 </div>
             <% }); %>
             <button type="submit" class="btn btn-success float-right removeBtn">Update Asset</button>
