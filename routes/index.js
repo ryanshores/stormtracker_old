@@ -2,6 +2,8 @@ var express     = require("express");
 var router      = express.Router();
 var nodemailer  = require("nodemailer");
 
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Coverpage
 router.get("/", function(req, res){
@@ -30,15 +32,8 @@ router.get("/contact", function(req, res){
 // Send contact email
 router.post('/contact', function(req, res){
     
-    var mailOptions, transport;
+    var mailOptions;
     
-    transport = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'matdantester@gmail.com',
-            pass: 'stormtracker'
-        }
-    });
     
     mailOptions = {
         replyTo: req.body.email,
@@ -48,15 +43,15 @@ router.post('/contact', function(req, res){
         html: req.body.inputText // html body
     };
     
-    transport.sendMail(mailOptions, function(err, info){
+    sgMail.send(mailOptions, (err, message) => {
         if(err){
             console.log(err);
             req.flash("error", err);
             res.redirect("/contact");
         } else {
             console.log("The email was sent");
-            req.flash("success", "Your message was sucesfully received.")
-            res.redirect("/home")
+            req.flash("success", "Your message was sucesfully received.");
+            res.redirect("/home");
         }
     });
 });
