@@ -1,29 +1,9 @@
-# StormTracker
+## Version 1.0
+* Finished April 12, 2018
+* Released April 13, 2018
+* Build ID 204513020018
 
-StormTracker aids our effort to monitor tropical cyclonic activities in real time and is for informational and educational use only. In no circumstances should StormTracker be used for life and death decisions or provide “guidance” to onshore and offshore operations.
-
-## Getting Started
-
-Clone if you want to 
-
-### Prerequisites
-
-See package.json
-
-## Deployment
-
-Dev branch used to stage the app. Features branched off of the dev branch.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Authors
-
-* **Ryan Shores** - *Initial work*
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
+## Version 1.1
+* Finished May 4, 2018
+* Released TBH
+* Build ID 000000000000
