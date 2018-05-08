@@ -8,6 +8,8 @@ var express     = require("express"),
     
 var Sites   = require("../models/sites");
 var Storms  = require('../models/storms');
+var adminStorms = require("../models/adminStorms");
+var Cards = require("../models/cards");
 
 router.use(bodyParser.urlencoded({extended: true}));
 
@@ -59,6 +61,7 @@ function getNewStorms(){
         // Get hurricanes
         function(done){
             request(stormsURL, function(err, responce, body){
+                console.log(body);
                 if( err ){
                     done( true );
                 } else {
@@ -154,6 +157,7 @@ router.get("/activity", function(req, res){
     let storms = [];
     let sites = [];
     let result = {};
+    let stormtabs = [];
     
     async.waterfall([
         // get the sites
@@ -173,8 +177,21 @@ router.get("/activity", function(req, res){
                 done( null, sites );
             }
         }, 
-        // get the storms
+        // get the storms from the easysite
         function( sites, done ){
+            adminStorms.find({isActive: true}).populate("cards").exec(function( err, storms ){
+                if( err ) { 
+                    console.log(err);
+                    done(null, sites, stormtabs);
+                }
+                else { 
+                    stormtabs = storms;
+                    done(null, sites, stormtabs);
+                }
+            });
+        },
+        // get the storms
+        function( sites, stormtabs, done ){
             request(stormsURL, function(err, responce, body){
                 if( err ){
                     result = {
@@ -182,7 +199,7 @@ router.get("/activity", function(req, res){
                         value: err.message,
                         dest: null
                     };
-                    done( true, sites, storms, result );
+                    done( true, sites, stormtabs, storms, result );
                 } else {
                     // parse the request
                     let json_parsed = JSON.parse(body);
@@ -203,6 +220,7 @@ router.get("/activity", function(req, res){
                         // This is the object that goes into the array
                         var stormObj = {
                             'name': storm['stormInfo']['stormName_Nice'],
+                            'number': storm['stormInfo']['stormNumber'],
                             'lat': storm['Current']['lat'],
                             'lng': storm['Current']['lon'],
                             'category': storm['Current']['SaffirSimpsonCategory'],
@@ -218,22 +236,28 @@ router.get("/activity", function(req, res){
                             storms.push(stormObj);
                         }
                     });
-                    result = {
-                        type: 'success',
-                        value: 'Successfully loaded the active storms',
-                        dest: null
-                    };
-                    done( null, sites, storms, result, 'done');
+                    
+                    done( null, sites, stormtabs, storms);
                 }
             });
-        }
+        },
+        // Remove Duplicates and Sort
+        function(sites, stormtabs, storms, done){
+            var filteredStorms = removeDuplicates(storms, 'number');
+            result = {
+                type: 'success',
+                value: 'Successfully loaded and filtered the active storms',
+                dest: null
+            };
+            done(null, sites, stormtabs, filteredStorms, result, 'done');
+        },
     ],
-    function( err, sites, storms, result ){ 
+    function( err, sites, stormtabs, filteredStorms, result ){ 
         if (err){
             req.flash( result.type, result.value );
-            res.render("./weather/tropical", { storms: storms, sites: sites });
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs });
         } else {
-            res.render("./weather/tropical", { storms: storms, sites: sites });
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs });
         } 
     });
 });

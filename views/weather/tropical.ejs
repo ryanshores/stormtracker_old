@@ -4,17 +4,7 @@
 <link rel="stylesheet" href="/stylesheets/index.css"></link>
 
 <% include ../partials/nav %>
-
-<% let activeStorms = [];%>
-<% storms.forEach(function( storm ){ %>
-  <% storm.isDup = false; %>
-  <% activeStorms.forEach(function( activeStorm ){ %>
-    <% if( activeStorm == storm.name ) { %>
-      <% storm.isDup = true %>
-    <% } %>
-  <% }); %>
-  <% activeStorms.push( storm.name ) %>
-<% }); %>
+<%console.log(stormtabs[0].cards);%>
 
 <div class="container p-sm-0">
   <!-- Nav tabs -->
@@ -25,6 +15,12 @@
     <li class="nav-item">
       <a class="nav-link" id="example-tab" data-toggle="tab" href="#example" role="tab" aria-controls="Example" aria-selected="false">Example</a>
     </li>
+    <% stormtabs.forEach(function(tab){ %>
+      <li class="nav-item">
+        <a class="nav-link" id="<%= tab._id %>-tab" data-toggle="tab" href="#<%= tab._id %>" role="tab" aria-controls="<%= tab.name %>" aria-selected="false"><%= tab.name %></a>
+      </li>
+    <% }); %>
+    
   </ul>
   
   <!-- Tab panes -->
@@ -151,6 +147,26 @@
         <% }); %>
       </div>
     </div>
+    <% stormtabs.forEach(function(tab){ %>
+      <div class="tab-pane" id="<%= tab._id %>" role="tabpanel" aria-labelledby="<%= tab.name %>">
+        <div class="row" style="width:100%;">
+          <%tab.cards.forEach(function(card){ if(card.isActive){ %>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img class="card-img-top" src="<%= card.url %>"></img>
+                    <div class="card-body">
+                        <p class="card-text"><%= card.desc %></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <!--<a class="btn btn-sm btn-outline-secondary" href="/storms/Iris/iris_track.png" target="_blank">View</a>-->
+                            <small class="text-muted"><%= card.title %></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          <% } }); %>
+        </div>
+      </div>
+    <% }); %>
   </div>
 
 </div>
