@@ -1,6 +1,6 @@
 {
   "name": "stormtracker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "stormtracker for matdan.com",
   "main": "app.js",
   "dependencies": {
