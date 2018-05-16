@@ -172,28 +172,19 @@
 
 <script>
 var map;
+var cones = JSON.parse('<%-JSON.stringify(cones)%>');
 function initMap() {
   
   // Get the storms passed from the server
   var storms = JSON.parse('<%- JSON.stringify(storms) %>');
   // setup the map of all storms
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 3,
+    zoom: 4,
     center: new google.maps.LatLng(21.5, -70),
     mapTypeId: 'satellite'
   });
   
-  // // Layers
-  // var coneLayer = new google.maps.KmlLayer({
-  //   url: 'https://www.nhc.noaa.gov/gis/examples/AL112017_020adv_CONE.kmz',
-  //   map: map,
-  //   preserveViewport: true
-  // });
-  // console.log('Cone Layer: ' + coneLayer);
-  // console.log(google.maps.Polyline(coneLayer));
-  // var conePoly = new google.maps.Polygon({
-  //   path: google.maps.Polyline(coneLayer);
-  // });
+  addLayers(cones);
   
   // Storms
   storms.forEach(function(storm){
@@ -243,6 +234,7 @@ function initMap() {
       });
     });
   });
+  
   // Assets
   <% if ( sites.length > 0 ) { %>
     var sites = JSON.parse('<%- JSON.stringify(sites) %>');
@@ -253,22 +245,13 @@ function initMap() {
       });
       
       var coords = new google.maps.LatLng(site.geometry.coordinates[1], site.geometry.coordinates[0]);
-      // var resultColor = 
-      //     google.maps.geometry.poly.containsLocation(coords, coneLayer) ?
-      //       'red' :
-      //       'blue';
       
       var marker = new google.maps.Marker({
           position: coords,
           map: map,
-          title: "Place: " + site.properties.name,
-          icon:  {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 3,
-            strokeColor: 'white',
-            strokeWeight: 2
-          }
+          icon: circle(site.properties.color)
       });
+      
       marker.addListener('click', function() {
           infoWindow.open(map, marker);
       });
@@ -278,6 +261,38 @@ function initMap() {
     });
   <% } %>
 }; 
+
+function circle(color){
+	var circle = {
+	    path: google.maps.SymbolPath.CIRCLE,
+	    fillColor: color,
+	    fillOpacity: .4,
+	    scale: 4.5,
+	    strokeColor: color,
+	    strokeOpacity: 0.8,
+	    strokeWeight: 1	
+	};
+	return circle;
+}
+
+function addLayers(cones){
+  cones.f50.forEach(function(cone){
+    map.data.addGeoJson(cone);
+  });
+  cones.f64.forEach(function(cone){
+    map.data.addGeoJson(cone);
+  })
+  map.data.setStyle(function(feature) {
+		    return {
+		      fillColor: feature.getProperty('fill'),
+		      fillOpacity: feature.getProperty('fill-opacity') * 0.5,
+		      strokeColor: feature.getProperty('stroke'),
+		      strokeOpacity: feature.getProperty('stroke-opacity'),
+		      strokeWeight: 1
+		    };
+	});	
+}
+
 </script>
 
 

@@ -11,6 +11,8 @@ var Storms  = require('../models/storms');
 var adminStorms = require("../models/adminStorms");
 var Cards = require("../models/cards");
 
+var pointsInCones = require("../middleware/pointsInCones");
+
 router.use(bodyParser.urlencoded({extended: true}));
 
 const wunderAPI = 'https://api.wunderground.com/api/' + process.env.WUNDERKEY;
@@ -158,6 +160,7 @@ router.get("/activity", function(req, res){
     let sites = [];
     let result = {};
     let stormtabs = [];
+    let cones = [];
     
     async.waterfall([
         // get the sites
@@ -169,7 +172,8 @@ router.get("/activity", function(req, res){
                         console.log(err.message);
                         done( null, sites );
                     } else {
-                        sites = foundSites;
+                        sites = JSON.stringify(foundSites);
+                        sites = JSON.parse(sites);
                         done( null, sites );
                     }
                 });
@@ -177,7 +181,7 @@ router.get("/activity", function(req, res){
                 done( null, sites );
             }
         }, 
-        // get the storms from the easysite
+        // get the storms for the tabs
         function( sites, done ){
             adminStorms.find({isActive: true}).populate("cards").exec(function( err, storms ){
                 if( err ) { 
@@ -192,32 +196,18 @@ router.get("/activity", function(req, res){
         },
         // make cones
         function(sites, stormtabs, callback){
-            var cones = {
-                f50: [],
-                f64: [],
-                hf50: [],
-                hf64: []
-            };
-            stormtabs.forEach(function(storm){
-                if(storm.json.toObject().type == "FeatureCollection"){
-                    var features = storm.json.toObject().features;
-                    features.forEach(function(feature){
-                        if(feature.properties.name == "f50"){
-                            cones.f50.push(feature);
-                        } else if(feature.properties.name == "f64"){
-                            cones.f64.push(feature);
-                        } else if(feature.properties.name == "hf50"){
-                            cones.hf50.push(feature);
-                        } else if(feature.properties.name == "hf64"){
-                            cones.hf64.push(feature);
-                        }
-                    });
+            pointsInCones(sites, stormtabs, function(err, cones, points, result){
+                if(err){
+                    // handle error
+                } else {
+                    sites = points;
+                    cones = cones;
                 }
+                callback(null, cones, sites, stormtabs);
             });
-            console.log(cones);
         },
         // get the storms
-        function( sites, stormtabs, done ){
+        function( cones, sites, stormtabs, done ){
             request(stormsURL, function(err, responce, body){
                 if( err ){
                     result = {
@@ -263,27 +253,27 @@ router.get("/activity", function(req, res){
                         }
                     });
                     
-                    done( null, sites, stormtabs, storms);
+                    done( null, cones, sites, stormtabs, storms);
                 }
             });
         },
-        // Remove Duplicates and Sort
-        function(sites, stormtabs, storms, done){
+        // Remove Duplicates
+        function( cones, sites, stormtabs, storms, done){
             var filteredStorms = removeDuplicates(storms, 'number');
             result = {
                 type: 'success',
                 value: 'Successfully loaded and filtered the active storms',
                 dest: null
             };
-            done(null, sites, stormtabs, filteredStorms, result, 'done');
+            done(null, cones, sites, stormtabs, filteredStorms, result, 'done');
         },
     ],
-    function( err, sites, stormtabs, filteredStorms, result ){ 
+    function( err, cones, sites, stormtabs, filteredStorms, result ){ 
         if (err){
             req.flash( result.type, result.value );
-            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs });
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones });
         } else {
-            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs });
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones });
         } 
     });
 });
