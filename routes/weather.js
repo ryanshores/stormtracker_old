@@ -190,6 +190,32 @@ router.get("/activity", function(req, res){
                 }
             });
         },
+        // make cones
+        function(sites, stormtabs, callback){
+            var cones = {
+                f50: [],
+                f64: [],
+                hf50: [],
+                hf64: []
+            };
+            stormtabs.forEach(function(storm){
+                if(storm.json.toObject().type == "FeatureCollection"){
+                    var features = storm.json.toObject().features;
+                    features.forEach(function(feature){
+                        if(feature.properties.name == "f50"){
+                            cones.f50.push(feature);
+                        } else if(feature.properties.name == "f64"){
+                            cones.f64.push(feature);
+                        } else if(feature.properties.name == "hf50"){
+                            cones.hf50.push(feature);
+                        } else if(feature.properties.name == "hf64"){
+                            cones.hf64.push(feature);
+                        }
+                    });
+                }
+            });
+            console.log(cones);
+        },
         // get the storms
         function( sites, stormtabs, done ){
             request(stormsURL, function(err, responce, body){
