@@ -21,12 +21,10 @@ let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 
 var emailer =  require('../emails/emailer.js');
 
-schedule.scheduleJob('*/6 * * *', function(){
-    // Running the schedule every 6 hours
-    console.log("Running scheduled job");
-    getNewStorms();
-});
+var taskSchedule = new schedule.RecurrenceRule();
 
+taskSchedule.hour = [0,6,12,18];
+schedule.scheduleJob(taskSchedule, getNewStorms);
 
 function getByValue(arr, query, value) {
     var newArr = [];
