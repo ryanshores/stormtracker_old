@@ -6,6 +6,8 @@ var express         = require('express'),
     mongoose        = require("mongoose"),
     passport        = require("passport"),
     LocalStrategy   = require("passport-local").Strategy,
+    session         = require("express-session"),
+    MongoStore      = require("connect-mongo")(session),
     bodyParser      = require("body-parser"),
     methodOverride  = require("method-override"),
     flash           = require("connect-flash");
@@ -39,8 +41,12 @@ mongoose.Promise = global.Promise;
 
 // Passport Setup
 // ============================================
-app.use(require("express-session")({
-    secret: "anything that we want",
+app.use(session({
+    secret: "MatDan",
+    store: new MongoStore({ 
+        mongooseConnection: mongoose.connection,
+        touchAfter: 24 * 3600
+    }),
     resave: false,
     saveUninitialized: false
 }));
