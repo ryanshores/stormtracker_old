@@ -3,7 +3,7 @@ const turf = require("@turf/turf");
 function pointsInCones(points, storms, callback){
 	var cones = makeCones(storms);
 	var newpoints = colorPoints(points, cones);
-	callback(null, cones, newpoints, "Result");
+	callback(null, cones, newpoints);
 }
 
 function makeCones(storms){

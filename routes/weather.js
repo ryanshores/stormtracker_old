@@ -10,6 +10,7 @@ var Sites   = require("../models/sites");
 var Storms  = require('../models/storms');
 var adminStorms = require("../models/adminStorms");
 var Cards = require("../models/cards");
+var newSites    = require("../models/newsites");
 
 var pointsInCones = require("../middleware/pointsInCones");
 
@@ -156,12 +157,12 @@ router.get("/activity", function(req, res){
     // init empty arr for storms
     let storms = [];
     let sites = [];
-    let result = {};
     let stormtabs = [];
     let cones = [];
+    let allSites = [];
     
     async.waterfall([
-        // get the sites
+        // get the users sites
         function(done){
             // check if a user is logged in
             if(req.user && req.user.isActive) {
@@ -194,12 +195,12 @@ router.get("/activity", function(req, res){
         },
         // make cones and color code
         function(sites, stormtabs, callback){
-            pointsInCones(sites, stormtabs, function(err, cones, points, result){
+            pointsInCones(sites, stormtabs, function(err, conesObj, points){
                 if(err){
                     // handle error
                 } else {
                     sites = points;
-                    cones = cones;
+                    cones = conesObj;
                 }
                 callback(null, cones, sites, stormtabs);
             });
@@ -208,12 +209,7 @@ router.get("/activity", function(req, res){
         function( cones, sites, stormtabs, done ){
             request(stormsURL, function(err, responce, body){
                 if( err ){
-                    result = {
-                        type: 'error',
-                        value: err.message,
-                        dest: null
-                    };
-                    done( true, sites, stormtabs, storms, result );
+                    done( err, sites, stormtabs, storms );
                 } else {
                     // parse the request
                     let json_parsed = JSON.parse(body);
@@ -258,20 +254,33 @@ router.get("/activity", function(req, res){
         // Remove Duplicates
         function( cones, sites, stormtabs, storms, done){
             var filteredStorms = removeDuplicates(storms, 'number');
-            result = {
-                type: 'success',
-                value: 'Successfully loaded and filtered the active storms',
-                dest: null
-            };
-            done(null, cones, sites, stormtabs, filteredStorms, result, 'done');
+            done(null, cones, sites, stormtabs, filteredStorms);
         },
+        // get all the sites
+        function( cones, sites, stormtabs, filteredStorms, callback){
+            newSites.find({}, function(err, foundNewSites){
+                if(err){
+                    console.log(err);
+                    callback(null, cones, sites, stormtabs, filteredStorms, allSites);
+                } else {
+                    foundNewSites.forEach(function(site){
+                        var siteObj = {
+                            name: site["Structure Name"],
+                            coordinates: [ site["Longitude"], site["Latitude"] ]
+                        };
+                        allSites.push(siteObj);
+                    });
+                    callback(null, cones, sites, stormtabs, filteredStorms, allSites);
+                }
+            });
+        }
     ],
-    function( err, cones, sites, stormtabs, filteredStorms, result ){ 
+    function( err, cones, sites, stormtabs, filteredStorms, allSites ){ 
         if (err){
-            req.flash( result.type, result.value );
-            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones });
+            req.flash( "error", err );
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones, allSites: allSites });
         } else {
-            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones });
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones, allSites: allSites });
         } 
     });
 });
