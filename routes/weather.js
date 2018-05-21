@@ -192,7 +192,7 @@ router.get("/activity", function(req, res){
                 }
             });
         },
-        // make cones
+        // make cones and color code
         function(sites, stormtabs, callback){
             pointsInCones(sites, stormtabs, function(err, cones, points, result){
                 if(err){

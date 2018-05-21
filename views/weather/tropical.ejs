@@ -171,12 +171,14 @@
 </div>
 
 <script>
+
 var map;
 var cones = JSON.parse('<%-JSON.stringify(cones)%>');
+var storms = JSON.parse('<%- JSON.stringify(storms) %>');
+var sites = JSON.parse('<%- JSON.stringify(sites) %>');
+
 function initMap() {
-  
-  // Get the storms passed from the server
-  var storms = JSON.parse('<%- JSON.stringify(storms) %>');
+
   // setup the map of all storms
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
@@ -185,8 +187,51 @@ function initMap() {
   });
   
   addLayers(cones);
+  addStorms(storms);
+  var markers = addSites(sites);
   
-  // Storms
+  // Add a marker clusterer to manage the markers.
+  var mcOptions = {
+    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+    gridSize: 50,
+    maxZoom: 5
+  }
+  var markerCluster = new MarkerClusterer( map, markers, mcOptions );
+
+}; 
+
+function circle(color){
+	var circle = {
+	    path: google.maps.SymbolPath.CIRCLE,
+	    fillColor: color,
+	    fillOpacity: .4,
+	    scale: 4.5,
+	    strokeColor: color,
+	    strokeOpacity: 0.8,
+	    strokeWeight: 1	
+	};
+	return circle;
+}
+
+function addLayers(cones){
+  cones.f50.forEach(function(cone){
+    map.data.addGeoJson(cone);
+  });
+  cones.f64.forEach(function(cone){
+    map.data.addGeoJson(cone);
+  })
+  map.data.setStyle(function(feature) {
+		    return {
+		      fillColor: feature.getProperty('fill'),
+		      fillOpacity: feature.getProperty('fill-opacity') * 0.5,
+		      strokeColor: feature.getProperty('stroke'),
+		      strokeOpacity: feature.getProperty('stroke-opacity'),
+		      strokeWeight: 1
+		    };
+	});	
+}
+
+function addStorms(storms){
   storms.forEach(function(storm){
     var contentWindow =
       '<p>Name: ' + storm.name + '</p>' +
@@ -234,69 +279,36 @@ function initMap() {
       });
     });
   });
-  
-  // Assets
-  <% if ( sites.length > 0 ) { %>
-    var sites = JSON.parse('<%- JSON.stringify(sites) %>');
-    sites.forEach(function(site){
-      var contentWindow = site.properties.name;
-      var infoWindow = new google.maps.InfoWindow({
-          content: contentWindow
-      });
-      
-      var coords = new google.maps.LatLng(site.geometry.coordinates[1], site.geometry.coordinates[0]);
-      
-      var marker = new google.maps.Marker({
-          position: coords,
-          map: map,
-          icon: circle(site.properties.color)
-      });
-      
-      marker.addListener('click', function() {
-          infoWindow.open(map, marker);
-      });
-      google.maps.event.addListener(map, "click", function(event) {
-        infoWindow.close();
-      });
-    });
-  <% } %>
-}; 
-
-function circle(color){
-	var circle = {
-	    path: google.maps.SymbolPath.CIRCLE,
-	    fillColor: color,
-	    fillOpacity: .4,
-	    scale: 4.5,
-	    strokeColor: color,
-	    strokeOpacity: 0.8,
-	    strokeWeight: 1	
-	};
-	return circle;
 }
 
-function addLayers(cones){
-  cones.f50.forEach(function(cone){
-    map.data.addGeoJson(cone);
+function addSites(sites){
+  var markers = [];
+  sites.forEach(function(site){
+    var contentWindow = site.properties.name;
+    var infoWindow = new google.maps.InfoWindow({
+        content: contentWindow
+    });
+    var coords = new google.maps.LatLng(site.geometry.coordinates[1], site.geometry.coordinates[0]);
+    var marker = new google.maps.Marker({
+        position: coords,
+        icon: circle(site.properties.color)
+    });
+    marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+    });
+    google.maps.event.addListener(map, "click", function(event) {
+      infoWindow.close();
+    });
+    markers.push(marker);
   });
-  cones.f64.forEach(function(cone){
-    map.data.addGeoJson(cone);
-  })
-  map.data.setStyle(function(feature) {
-		    return {
-		      fillColor: feature.getProperty('fill'),
-		      fillOpacity: feature.getProperty('fill-opacity') * 0.5,
-		      strokeColor: feature.getProperty('stroke'),
-		      strokeOpacity: feature.getProperty('stroke-opacity'),
-		      strokeWeight: 1
-		    };
-	});	
+  return markers;
 }
 
 </script>
 
 
-
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.GOOGLEJSKEY%>&callback=initMap"></script>
 
 

@@ -47,7 +47,7 @@ function colorPoints(points, cones){
 			}
 		});
 		if(pt.properties.color == undefined){
-			pt.properties.color = "green";
+			pt.properties.color = "#3AAD00";
 		}
 	});
 	return points;
