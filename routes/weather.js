@@ -13,6 +13,7 @@ var Cards = require("../models/cards");
 var newSites    = require("../models/newsites");
 
 var pointsInCones = require("../middleware/pointsInCones");
+var pointsInCones2 = require("../middleware/pointsInCones2");
 
 router.use(bodyParser.urlencoded({extended: true}));
 
@@ -263,15 +264,29 @@ router.get("/activity", function(req, res){
                     console.log(err);
                     callback(null, cones, sites, stormtabs, filteredStorms, allSites);
                 } else {
-                    foundNewSites.forEach(function(site){
-                        var siteObj = {
-                            name: site["Structure Name"],
-                            coordinates: [ site["Longitude"], site["Latitude"] ]
-                        };
-                        allSites.push(siteObj);
+                    foundNewSites.forEach(function(site, i){
+                        if( i % 10 == 0 ){
+                            var siteObj = {
+                                name: site["Structure Name"],
+                                coordinates: [ site["Longitude"], site["Latitude"] ]
+                            };
+                            siteObj.name = siteObj.name.replace(/"/g,"");
+                            allSites.push(siteObj);    
+                        }
                     });
                     callback(null, cones, sites, stormtabs, filteredStorms, allSites);
                 }
+            });
+        },
+        // coor code all points
+        function(cones, sites, stormtabs, filteredStorms, allSites, callback){
+            pointsInCones2(allSites, cones, function(err, points){
+                if(err){
+                    // handle error
+                } else {
+                    allSites = points;
+                }
+                callback(null, cones, sites, stormtabs, filteredStorms, allSites);
             });
         }
     ],

@@ -1,6 +1,7 @@
-/* global google, cones, storms, sites, MarkerClusterer */
+/* global google, cones, storms, sites, MarkerClusterer, allSites */
 
 var map;
+var map2;
 
 function initMap() {
 
@@ -11,9 +12,21 @@ function initMap() {
     mapTypeId: 'satellite'
   });
   
-  addLayers(cones);
-  addStorms(storms);
-  var markers = addSites(sites);
+  map2 = new google.maps.Map(document.getElementById('map2'), {
+    zoom: 4,
+    center: new google.maps.LatLng(21.5, -70),
+    mapTypeId: 'satellite'
+  });
+  
+  // Users asset map
+  addLayers(cones, map);
+  addStorms(storms, map);
+  var markers = addSites(sites, map);
+  
+  // Public Map
+  addLayers(cones, map2);
+  addStorms(storms, map2);
+  var publicMarkers = publicSites(allSites);
   
   // Add a marker clusterer to manage the markers.
   var mcOptions = {
@@ -22,6 +35,7 @@ function initMap() {
     maxZoom: 5
   };
   var markerCluster = new MarkerClusterer( map, markers, mcOptions );
+  var markerCluster = new MarkerClusterer( map2, publicMarkers, mcOptions );
 
 }
 
@@ -38,7 +52,7 @@ function circle(color){
 	return circle;
 }
 
-function addLayers(cones){
+function addLayers(cones, map){
   cones.f50.forEach(function(cone){
     map.data.addGeoJson(cone);
   });
@@ -56,7 +70,7 @@ function addLayers(cones){
 	});	
 }
 
-function addStorms(storms){
+function addStorms(storms, map){
   storms.forEach(function(storm){
     var contentWindow =
       '<p>Name: ' + storm.name + '</p>' +
@@ -106,7 +120,7 @@ function addStorms(storms){
   });
 }
 
-function addSites(sites){
+function addSites(sites, map){
   var markers = [];
   sites.forEach(function(site){
     var contentWindow = site.properties.name;
@@ -123,6 +137,18 @@ function addSites(sites){
     });
     google.maps.event.addListener(map, "click", function(event) {
       infoWindow.close();
+    });
+    markers.push(marker);
+  });
+  return markers;
+}
+
+function publicSites(sites){
+  var markers = [];
+  sites.forEach(function(site){
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(site.coordinates[1], site.coordinates[0]),
+      icon: circle(site.color)
     });
     markers.push(marker);
   });

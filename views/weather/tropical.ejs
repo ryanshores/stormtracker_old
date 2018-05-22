@@ -11,9 +11,11 @@
     <li class="nav-item">
       <a class="nav-link active" id="storms-tab" data-toggle="tab" href="#storms" role="tab" aria-controls="Storms" aria-selected="true">Current Storms</a>
     </li>
+    <%if(currentUser){%>
     <li class="nav-item">
-      <a class="nav-link" id="sites-tab" data-toggle="tab" href="#sites" role="tab" aria-controls="Sites" aria-selected="false">Sites</a>
+      <a class="nav-link" id="sites-tab" data-toggle="tab" href="#sites" role="tab" aria-controls="Sites" aria-selected="false">Company Assets</a>
     </li>
+    <%}%>
     <li class="nav-item">
       <a class="nav-link" id="example-tab" data-toggle="tab" href="#example" role="tab" aria-controls="Example" aria-selected="false">Example</a>
     </li>
@@ -109,7 +111,7 @@
         </div>
 
         <div class="col-12 col-xl-8">
-          <div id="map" class="map mt-0 mt-lg-2 rounded"></div> 
+          <div id="map2" class="map mt-0 mt-lg-2 rounded"></div> 
           <div id="legend" class="row align-items-center align-items-stretch" style="margin: 0;">
             <div class="col text-center shadow" style="background: #46719A">TS</div>
             <div class="col text-center shadow" style="background: #3AAD00">CAT 1</div>
@@ -127,7 +129,7 @@
     </div>
     </div>
     <div class="tab-pane" id="sites" role="tabpanel" aria-labelledby="sites-tab">
-      <div id="map2" class="map mt-0 mt-lg-2 rounded"></div> 
+      <div id="map" class="map mt-0 mt-lg-2 rounded"></div> 
     </div>
     <div class="tab-pane" id="example" role="tabpanel" aria-labelledby="example-tab">
       <% var cards = [
@@ -182,13 +184,11 @@
 <script>var allSites = JSON.parse('<%- JSON.stringify(allSites) %>');</script>
 
 <script src="/scripts/tropicalmap.js"></script>
-<script src="/scripts/tropicalmap*.js"></script>
 
 
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.GOOGLEJSKEY%>&callback=initMap"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.GOOGLEJSKEY%>&callback=initMap2"></script>
 
 
 <% include ../partials/footer %>
