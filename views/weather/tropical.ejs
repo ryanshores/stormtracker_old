@@ -21,7 +21,7 @@
     <%}%>
     <% stormtabs.forEach(function(tab){ %>
       <li class="nav-item">
-        <a class="nav-link" id="<%= tab._id %>-tab" data-toggle="tab" href="#<%= tab._id %>" role="tab" aria-controls="<%= tab.name %>" aria-selected="false"><%= tab.name %></a>
+        <a class="nav-link" id="<%= tab._id %>-tab" data-toggle="tab" href="#<%= tab._id %>" role="tab" aria-controls="<%= tab.name %>" aria-selected="false"><%= tab.name %> Cat. <%= tab.category %></a>
       </li>
     <% }); %>
     
