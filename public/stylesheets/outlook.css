@@ -1,6 +1,9 @@
 .table {
 	background-color: white;
 	color: black;
+	display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 td {
@@ -9,4 +12,10 @@ td {
 
 .table .thead-dark th {
     background-color: #5897c7;
+}
+
+@media (min-width: 700px) {
+    table {
+	    display: table!important;
+    }
 }

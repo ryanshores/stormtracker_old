@@ -2,6 +2,9 @@
 
 <link rel="stylesheet" href="/stylesheets/map.css"></link>
 <link rel="stylesheet" href="/stylesheets/index.css"></link>
+<!-- Scrolling tabs -->
+<link rel='stylesheet' type="text/css" href="/stylesheets/jquery.scrolling-tabs.min.css"></link>
+
 
 <% include ../partials/nav %>
 
@@ -30,7 +33,7 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div class="tab-pane active" id="storms" role="tabpanel" aria-labelledby="storms-tab">
-      <div class="row">
+      <div class="row" style="width: 100%;">
         <div class="col">
           <div class="row mx-auto">
             <% storms.forEach(function(storm){ %>
@@ -190,5 +193,8 @@
     </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.GOOGLEJSKEY%>&callback=initMap"></script>
 
+<!-- Scrolling tabs -->
+<script async src='/scripts/jquery.scrolling-tabs.min.js'></script>
+<script async src='/scripts/scrolling.js'></script>
 
 <% include ../partials/footer %>
