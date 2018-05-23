@@ -19,9 +19,6 @@
       <a class="nav-link" id="sites-tab" data-toggle="tab" href="#sites" role="tab" aria-controls="Sites" aria-selected="false">Company Assets</a>
     </li>
     <%}%>
-    <li class="nav-item">
-      <a class="nav-link" id="example-tab" data-toggle="tab" href="#example" role="tab" aria-controls="Example" aria-selected="false">Example</a>
-    </li>
     <% stormtabs.forEach(function(tab){ %>
       <li class="nav-item">
         <a class="nav-link" id="<%= tab._id %>-tab" data-toggle="tab" href="#<%= tab._id %>" role="tab" aria-controls="<%= tab.name %>" aria-selected="false"><%= tab.name %></a>
@@ -133,29 +130,6 @@
     </div>
     <div class="tab-pane" id="sites" role="tabpanel" aria-labelledby="sites-tab">
       <div id="map" class="map mt-0 mt-lg-2 rounded"></div> 
-    </div>
-    <div class="tab-pane" id="example" role="tabpanel" aria-labelledby="example-tab">
-      <% var cards = [
-        {title: 'Track Guidance', desc: 'Description', url: '/storms/Iris/iris_track.png'},
-        {title: 'Intensity Guidance', desc: 'Description', url: '/storms/Iris/iris_intensity.png'},
-
-      ];%>
-      <div class="row" style="width:100%;">
-        <% cards.forEach(function(card){ %>
-          <div class="col-md-4">
-              <div class="card mb-4">
-                  <img class="card-img-top" src="<%= card.url %>"></img>
-                  <div class="card-body">
-                      <p class="card-text"><%= card.desc %></p>
-                      <div class="d-flex justify-content-between align-items-center">
-                          <!--<a class="btn btn-sm btn-outline-secondary" href="/storms/Iris/iris_track.png" target="_blank">View</a>-->
-                          <small class="text-muted"><%= card.title %></small>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        <% }); %>
-      </div>
     </div>
     <% stormtabs.forEach(function(tab){ %>
       <div class="tab-pane" id="<%= tab._id %>" role="tabpanel" aria-labelledby="<%= tab.name %>">

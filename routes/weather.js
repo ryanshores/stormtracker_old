@@ -3,7 +3,6 @@ var express     = require("express"),
     request     = require("request"),
     bodyParser  = require("body-parser"),
     async       = require("async"),
-    rss         = require("rss-to-json"),
     schedule    = require('node-schedule');
     
 var Sites   = require("../models/sites");
@@ -151,6 +150,7 @@ function getNewStorms(){
 router.get("/satellite", function(req, res){
    res.render("./weather/radar"); 
 });
+
 // Loads the current storms
 // Will color code assets in danger in the future also
 router.get("/activity", function(req, res){
@@ -299,51 +299,12 @@ router.get("/activity", function(req, res){
         } 
     });
 });
+
 // Loads tabed page of different weather maps
 router.get("/models", function(req, res) {
    res.render("./weather/models"); 
 });
-// Forecast
-router.get("/current", function(req, res){
-    res.render('./weather/current');
-});
-// Takes input location and returns forecast
-router.post("/current", function(req, res){
-    let forecast = [];
-    let coords = req.body.coords;
-    
-    request(wunderAPI + '/forecast10day/q/' + coords + '.json', function(err, responce, body){
-        if(err){
-            req.flash("error", err);
-            res.render("./weather/current");
-        } else {
-            let json_parsed = JSON.parse(body);
-            if( json_parsed['forecast'] ) {
-                // Do something if the forecast exists
-                json_parsed['forecast']['simpleforecast']['forecastday'].forEach(function(day, i){
-                    var forecastObj = {
-                        'weekday': day['date']['weekday'],
-                        'highT': day['high']['fahrenheit'],
-                        'lowT': day['low']['fahrenheit'],
-                        'condition': day['conditions'],
-                        'icon': day['icon_url'],
-                        'percentage': day['pop'],
-                        'windSpeed': day['avewind']['mph'],
-                        'windDirection': day['avewind']['dir'],
-                        'gustSpeed': day['maxwind']['mph'],
-                        'gustDirection': day['maxwind']['dir'],
-                        'humidity': day['avehumidity']
-                    };
-                    forecast.push(forecastObj);
-                });
-                res.render( "./weather/current", { forecast: forecast, coords: coords } );
-            } else {
-              // Do something if the forecast does not exist
-              res.render("./weather/current");
-            }
-        }
-    });
-});
+
 // Outlook
 router.get("/outlook", function(req, res) {
     res.render("./weather/outlook");
