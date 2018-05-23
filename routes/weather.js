@@ -8,6 +8,12 @@ var express     = require("express"),
     
 var Sites   = require("../models/sites");
 var Storms  = require('../models/storms');
+var adminStorms = require("../models/adminStorms");
+var Cards = require("../models/cards");
+var newSites    = require("../models/newsites");
+
+var pointsInCones = require("../middleware/pointsInCones");
+var pointsInCones2 = require("../middleware/pointsInCones2");
 
 router.use(bodyParser.urlencoded({extended: true}));
 
@@ -17,12 +23,10 @@ let stormsURL = `${wunderAPI}/currenthurricane/view.json`;
 
 var emailer =  require('../emails/emailer.js');
 
-schedule.scheduleJob('*/6 * * *', function(){
-    // Running the schedule every 6 hours
-    console.log("Running scheduled job");
-    getNewStorms();
-});
+var taskSchedule = new schedule.RecurrenceRule();
 
+taskSchedule.hour = [0,6,12,18];
+schedule.scheduleJob(taskSchedule, getNewStorms);
 
 function getByValue(arr, query, value) {
     var newArr = [];
@@ -59,6 +63,7 @@ function getNewStorms(){
         // Get hurricanes
         function(done){
             request(stormsURL, function(err, responce, body){
+                console.log(body);
                 if( err ){
                     done( true );
                 } else {
@@ -153,10 +158,12 @@ router.get("/activity", function(req, res){
     // init empty arr for storms
     let storms = [];
     let sites = [];
-    let result = {};
+    let stormtabs = [];
+    let cones = [];
+    let allSites = [];
     
     async.waterfall([
-        // get the sites
+        // get the users sites
         function(done){
             // check if a user is logged in
             if(req.user && req.user.isActive) {
@@ -165,7 +172,8 @@ router.get("/activity", function(req, res){
                         console.log(err.message);
                         done( null, sites );
                     } else {
-                        sites = foundSites;
+                        sites = JSON.stringify(foundSites);
+                        sites = JSON.parse(sites);
                         done( null, sites );
                     }
                 });
@@ -173,16 +181,36 @@ router.get("/activity", function(req, res){
                 done( null, sites );
             }
         }, 
-        // get the storms
+        // get the storms for the tabs
         function( sites, done ){
+            adminStorms.find({isActive: true}).populate("cards").exec(function( err, storms ){
+                if( err ) { 
+                    console.log(err);
+                    done(null, sites, stormtabs);
+                }
+                else { 
+                    stormtabs = storms;
+                    done(null, sites, stormtabs);
+                }
+            });
+        },
+        // make cones and color code
+        function(sites, stormtabs, callback){
+            pointsInCones(sites, stormtabs, function(err, conesObj, points){
+                if(err){
+                    // handle error
+                } else {
+                    sites = points;
+                    cones = conesObj;
+                }
+                callback(null, cones, sites, stormtabs);
+            });
+        },
+        // get the storms
+        function( cones, sites, stormtabs, done ){
             request(stormsURL, function(err, responce, body){
                 if( err ){
-                    result = {
-                        type: 'error',
-                        value: err.message,
-                        dest: null
-                    };
-                    done( true, sites, storms, result );
+                    done( err, sites, stormtabs, storms );
                 } else {
                     // parse the request
                     let json_parsed = JSON.parse(body);
@@ -203,6 +231,7 @@ router.get("/activity", function(req, res){
                         // This is the object that goes into the array
                         var stormObj = {
                             'name': storm['stormInfo']['stormName_Nice'],
+                            'number': storm['stormInfo']['stormNumber'],
                             'lat': storm['Current']['lat'],
                             'lng': storm['Current']['lon'],
                             'category': storm['Current']['SaffirSimpsonCategory'],
@@ -218,22 +247,55 @@ router.get("/activity", function(req, res){
                             storms.push(stormObj);
                         }
                     });
-                    result = {
-                        type: 'success',
-                        value: 'Successfully loaded the active storms',
-                        dest: null
-                    };
-                    done( null, sites, storms, result, 'done');
+                    
+                    done( null, cones, sites, stormtabs, storms);
                 }
+            });
+        },
+        // Remove Duplicates
+        function( cones, sites, stormtabs, storms, done){
+            var filteredStorms = removeDuplicates(storms, 'number');
+            done(null, cones, sites, stormtabs, filteredStorms);
+        },
+        // get all the sites
+        function( cones, sites, stormtabs, filteredStorms, callback){
+            newSites.find({}, function(err, foundNewSites){
+                if(err){
+                    console.log(err);
+                    callback(null, cones, sites, stormtabs, filteredStorms, allSites);
+                } else {
+                    foundNewSites.forEach(function(site, i){
+                        if( i % 10 == 0 ){
+                            var siteObj = {
+                                name: site["Structure Name"],
+                                coordinates: [ site["Longitude"], site["Latitude"] ]
+                            };
+                            siteObj.name = siteObj.name.replace(/"/g,"");
+                            allSites.push(siteObj);    
+                        }
+                    });
+                    callback(null, cones, sites, stormtabs, filteredStorms, allSites);
+                }
+            });
+        },
+        // coor code all points
+        function(cones, sites, stormtabs, filteredStorms, allSites, callback){
+            pointsInCones2(allSites, cones, function(err, points){
+                if(err){
+                    // handle error
+                } else {
+                    allSites = points;
+                }
+                callback(null, cones, sites, stormtabs, filteredStorms, allSites);
             });
         }
     ],
-    function( err, sites, storms, result ){ 
+    function( err, cones, sites, stormtabs, filteredStorms, allSites ){ 
         if (err){
-            req.flash( result.type, result.value );
-            res.render("./weather/tropical", { storms: storms, sites: sites });
+            req.flash( "error", err );
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones, allSites: allSites });
         } else {
-            res.render("./weather/tropical", { storms: storms, sites: sites });
+            res.render("./weather/tropical", { storms: filteredStorms, sites: sites, stormtabs: stormtabs, cones: cones, allSites: allSites });
         } 
     });
 });

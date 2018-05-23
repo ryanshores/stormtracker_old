@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-// SCHEMA SETUP
+// SCHEMA SETUP - storms colleced from wunderground api
 var autostormSchema = new mongoose.Schema({
     name: String,
     number: String,
